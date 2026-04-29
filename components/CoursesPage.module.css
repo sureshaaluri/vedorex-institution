@@ -277,7 +277,6 @@
 
 /* Dot before each step title */
 .routeStep:first-child .stepTitle::before {
-  content: "•";
   font-size: 1.2rem;
   color: white;
 }
@@ -297,4 +296,20 @@
   font-size: 0.75rem;
   /* dashed line effect */
   letter-spacing: 2px;
+}
+/* ── Tablet (768px) ── */
+@media (max-width: 768px) {
+  .coursesSection {
+    grid-template-columns: 1fr;
+  }
+  .hero {
+    min-height: unset;
+   
+  }
+}
+@media (max-width: 425px) {
+  .stats {
+    flex-direction: column;
+    gap: 24px;
+  }
 }

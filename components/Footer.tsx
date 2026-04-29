@@ -1,80 +1,78 @@
-import styles from "./Footer.module.css";
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+// components/Footer.tsx
+import Image from "next/image";
+import Link from "next/link";
+import "./Footer.css";
 
-export default function Footer({ data }: any) {
+interface LinkItem {
+  id: number;
+  label: string;
+  url: string;
+}
+
+interface LinkGroup {
+  id: number;
+  label: string;
+  link_groups: LinkItem[];
+}
+
+interface FooterData {
+  description: string;
+  copyright: string;
+  logo: {
+    url: string;
+    alternativeText?: string;
+    width?: number;
+    height?: number;
+  };
+  link_group: LinkGroup[];
+}
+
+const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+
+export default function Footer({ footerData }: { footerData: FooterData }) {
+  if (!footerData) return null;
+
+  const { description, copyright, logo, link_group } = footerData;
+  const logoUrl = logo?.url ? `${API_URL}${logo.url}` : null;
+
+  console.log("Logo URL:", logoUrl);
+
   return (
-    <footer className={styles.footer}>
-      <div className={styles.footerContainer}>
+    <footer className="footer">
+      <div className="footer-content">
 
-        {/* ✅ Row wrapper */}
-        <div className="row">
-
-          {/* Column 1 */}
-          <div className="col-12 col-md-3 mb-4 mb-md-0 footerCol">
-            {data?.logo?.url && (
-             <img
-  src={`${STRAPI_URL}${data.logo.url}`}
-  alt={data?.logo?.alternativeText || "Logo"}
-  className="img-fluid"
-  style={{
-    maxWidth: "150px",
-    height: "70px",
-    objectFit: "contain",
-  }}
-/>
-            )}
-
-            <p className={styles.description}>
-              We provide high quality services and solutions for your business.
-            </p>
-          </div>
-
-          {/* Column 2 */}
-          <div className="col-12 col-md-3 footerCol">
-            <h6 className={styles.heading}>Quick Links</h6>
-            <a href="#" className={styles.link}>Home</a>
-            <a href="#" className={styles.link}>About</a>
-            <a href="#" className={styles.link}>Courses</a>
-            <a href="#" className={styles.link}>Contact</a>
-          </div>
-
-          {/* Column 3 */}
-          <div className="col-12 col-md-3 footerCol">
-            <h6 className={styles.heading}>Services</h6>
-            <a href="#" className={styles.link}>Web Development</a>
-            <a href="#" className={styles.link}>UI/UX Design</a>
-            <a href="#" className={styles.link}>Marketing</a>
-          </div>
-
-          {/* Column 4 */}
-          <div className="col-12 col-md-3 footerCol">
-            <h6 className={styles.heading}>Contact</h6>
-
-            <div className={styles.contactItem}>
-              <span className={styles.icon}>📍</span>
-              <span className={styles.text}>Hyderabad, India</span>
-            </div>
-
-            <div className={styles.contactItem}>
-              <span className={styles.icon}>📞</span>
-              <span className={styles.text}>+91 9876543210</span>
-            </div>
-
-            <div className={styles.contactItem}>
-              <span className={styles.icon}>✉️</span>
-              <span className={styles.text}>info@email.com</span>
-            </div>
-          </div>
-
+        {/* ── Left: Logo + Description ── */}
+        <div className="footer-left">
+          {logoUrl && (
+            <img
+              src={logoUrl}
+              alt="logo"
+              style={{ width: 150, height: 50, objectFit: "contain" }}
+            />
+          )}
+          {description && <p>{description}</p>}
         </div>
 
-        <hr className={styles.divider} />
-
-        <p className={styles.copy}>
-          © 2026 Your Company. All rights reserved.
-        </p>
+        {/* ── Link Groups (direct children of grid) ── */}
+        {link_group?.map((group) => (
+          <div key={group.id} className="footer-link-group">
+            <h4 className="footer-link-group__title">{group.label}</h4>
+            <ul className="footer-link-group__list">
+              {group.link_groups?.map((link) => (
+                <li key={link.id}>
+                  <Link href={link.url || "#"} className="footer-link">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
 
       </div>
+
+      <hr />
+      {copyright && <p className="copyright">{copyright}</p>}
     </footer>
   );
 }

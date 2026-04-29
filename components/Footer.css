@@ -1,0 +1,154 @@
+/* Footer.css */
+
+.footer {
+  background-color: #f0f0f5;
+  padding: 48px 80px 24px;
+  border-top: 2px solid #d1d5db;
+}
+
+/* ── Main Layout ── */
+.footer-content {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+/* ── Left: Logo + Description ── */
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer-left p {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── Link Groups ── */
+.footer-center {
+  display: contents;
+}
+
+.footer-link-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-link-group__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px;
+}
+
+.footer-link-group__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-link {
+  font-size: 14px;
+  color: #4b5563;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: #7c3aed;
+}
+
+/* ── Divider ── */
+hr {
+  border: 0;
+  height: 1px;
+  background-color: #d1d5db;
+  margin: 0 0 20px;
+}
+
+/* ── Copyright ── */
+.copyright {
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* ── 1024px ── */
+@media (max-width: 1024px) {
+  .footer {
+    padding: 40px 40px 24px;
+  }
+
+  .footer-content {
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 32px;
+  }
+
+  .footer-center > .footer-link-group:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── 768px ── */
+@media (max-width: 768px) {
+  .footer {
+    padding: 36px 24px 20px;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .footer-left {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── 425px ── */
+@media (max-width: 425px) {
+  .footer {
+    padding: 28px 16px 16px;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .footer-link-group__title {
+    font-size: 14px;
+  }
+
+  .footer-link {
+    font-size: 13px;
+  }
+}
+
+/* ── 320px ── */
+@media (max-width: 320px) {
+  .footer {
+    padding: 20px 12px 12px;
+  }
+
+  .footer-link-group__title {
+    font-size: 13px;
+  }
+
+  .footer-link {
+    font-size: 12px;
+  }
+
+  .copyright {
+    font-size: 11px;
+  }
+}
