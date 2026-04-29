@@ -24,6 +24,7 @@ export async function getAboutData() {
  export async function getContactData() {
   const res = await fetch(
     "http://localhost:1337/api/contact-page?populate[sections][populate]=*",
+    
     {
       cache: "no-store",
     }

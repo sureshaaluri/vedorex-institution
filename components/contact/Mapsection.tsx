@@ -1,4 +1,4 @@
-const STRAPI_URL = "http://localhost:1337";
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 
 interface MapData {
   id: number;
@@ -22,7 +22,8 @@ export default function Mapsection({ data }: { data: MapData }) {
           </h2>
           <div
             style={{
-              width: "60px", height: "3px",
+              width: "60px",
+              height: "3px",
               backgroundColor: "#5C44D8",
               margin: "12px auto 0",
               borderRadius: "2px",
@@ -30,29 +31,13 @@ export default function Mapsection({ data }: { data: MapData }) {
           />
         </div>
 
-        {/* ✅ Full width map image */}
-        {data.background_image?.url && (
-          <div className="rounded-4 overflow-hidden shadow">
-            <img
-              src={`${STRAPI_URL}${data.background_image.url}`}
-              alt={data.background_image.alternativeText || "Map"}
-              style={{
-                width: "100%",
-                height: "400px",
-                objectFit: "cover",
-                display: "block",
-               }}
-            />
-          </div>
-        )}
-
-        {/* ✅ Google Map iframe if url exists */}
+        {/* Google Map iframe — shown if map_url exists */}
         {data.map_url && (
-          <div className="rounded-4 overflow-hidden shadow mt-4">
+          <div className="rounded-4 overflow-hidden shadow">
             <iframe
               src={data.map_url}
               width="100%"
-              height="400px"
+              height="450px"
               allowFullScreen
               loading="lazy"
               style={{ border: 0, display: "block" }}
@@ -61,11 +46,32 @@ export default function Mapsection({ data }: { data: MapData }) {
           </div>
         )}
 
-        {/* ✅ Fallback if both null */}
-        {!data.background_image?.url && !data.map_url && (
+        {/* Background image — shown below map if exists */}
+        {data.background_image?.url && (
+          <div className="rounded-4 overflow-hidden shadow mt-4">
+            <img
+              src={`${STRAPI_URL}${data.background_image.url}`}
+              alt={data.background_image.alternativeText || "Map"}
+              style={{
+                width: "100%",
+                height: "400px",
+                objectFit: "cover",
+                display: "block",
+              }}
+            />
+          </div>
+        )}
+
+        {/* Fallback if both are null */}
+        {!data.map_url && !data.background_image?.url && (
           <div
             className="rounded-4 d-flex align-items-center justify-content-center"
-            style={{ height: "400px", backgroundColor: "#e9ecef", color: "#6c757d" }}
+            style={{
+              height: "400px",
+              backgroundColor: "#e9ecef",
+              color: "#6c757d",
+              fontSize: "16px",
+            }}
           >
             📍 Map coming soon
           </div>

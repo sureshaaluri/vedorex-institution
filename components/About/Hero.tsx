@@ -24,12 +24,7 @@ export default function Hero({ data }: any) {
           {data.Description}
         </p>
 
-        <a
-          href={data.button_link}
-          className={`btn btn-light ${styles.heroBtn}`}
-        >
-          {data.button_text}
-        </a>
+      
       </div>
     </section>
   );

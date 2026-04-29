@@ -76,7 +76,7 @@
 }
 
 .highlightText {
-  color: #5c44d8;
+  color: #547cd3;
 }
 
 /* ===== DESCRIPTION ===== */
@@ -88,30 +88,63 @@
 
 /* ===== BUTTONS ===== */
 .primaryBtn {
-  background: linear-gradient(135deg, #5c44d8, #a855f7);
-  border: none;
-  border-radius: 50px;
-  padding: 10px 24px;
+  background: #1760ffea;
   color: #fff;
+  width: 157px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  border: none;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .primaryBtn:hover {
-  opacity: 0.9;
+  background: #0a4fd6;
+  transform: scale(1.05);
   color: #fff;
 }
 
 .secondaryBtn {
-  border: 2px solid #9333ea;
+  border: 2px solid #0a4fd6;
   color: #000;
   background-color: transparent;
+  width: 211px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50px;
-  padding: 10px 24px;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .secondaryBtn:hover {
-  background-color: #9333ea;
+  background-color: #0a4fd6;
   color: #fff;
+  transform: scale(1.05);
+
 }
+ 
+ .btnGroup {
+   display: flex;
+   gap: 12px;
+   margin-top: 24px;
+ }
+ 
+ @media (max-width: 768px) {
+   .btnGroup {
+     justify-content: center;
+     width: 100%;
+   }
+ }
+ 
+ @media (max-width: 480px) {
+   .btnGroup {
+     flex-direction: column;
+     gap: 16px;
+   }
+ }
 
 /* ===== IMAGE ===== */
 .heroImage {
@@ -124,14 +157,14 @@
 
 /* ===== STATS OVERLAY ===== */
 .statsOverlay {
-  background: rgba(30, 20, 60, 0.92);
+  background: rgba(0, 0, 0, 0.4);
   border-top: 1px solid rgba(168, 85, 247, 0.3);
   border-radius: 0 0 16px 16px;
   overflow: hidden;
 }
 
 .statItem {
-  background-color: rgba(47, 61, 191, 0.7);
+  background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(4px);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   text-align: center;
@@ -273,7 +306,7 @@
 
 }
 
-/* Small Mobile — 480px కంటే తక్కువ */
+
 @media (max-width: 480px) {
   .heading {
     font-size: 22px;
@@ -292,4 +325,20 @@
   .heroImage {
     max-height: 180px;
   }
+}
+
+@media (max-width: 425px) {
+  .carouselPrev,
+  .carouselNext {
+    display: none !important;
+  }
+  .heroImage,
+  .statsOverlay,
+  .statItem {
+    display: none;
+  }
+  .gap3{
+    display: none;
+  }
+  
 }

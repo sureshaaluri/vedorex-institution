@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import styles from "./Heroslider.module.css";
+import { motion } from "framer-motion";
 
 const STRAPI_URL = "http://localhost:1337";
 
@@ -67,7 +68,12 @@ export default function HeroSlider({ data }: { data: HeroSliderData }) {
   }, []);
 
   return (
-    <section>
+    <motion.section
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ amount: 0.2 }}
+      transition={{ duration: 0.8 }}
+    >
       <div
         style={{
           maxWidth: "1920px",
@@ -75,7 +81,7 @@ export default function HeroSlider({ data }: { data: HeroSliderData }) {
           width: "100%",
           overflow: "hidden",
           boxSizing: "border-box",
-          backgroundColor: "#cbcbcb",
+          backgroundColor: "#F0EEFF",
         }}
       >
         <div
@@ -95,12 +101,12 @@ export default function HeroSlider({ data }: { data: HeroSliderData }) {
                 className={index === 0 ? "active" : ""}
                 aria-current={index === 0 ? "true" : undefined}
                 style={{
-                  width: "12px", // ✅ equal width & height = circle
+                  width: "12px", 
                   height: "12px",
-                  borderRadius: "50%", // ✅ makes it round
+                  borderRadius: "50%", 
                   backgroundColor: "#fff",
                   border: "none",
-                  opacity: index === 0 ? "1" : "0.5", // active = full, inactive = faded
+                  opacity: index === 0 ? "1" : "0.5", 
                   transition: "opacity 0.3s ease",
                 }}
               />
@@ -131,7 +137,7 @@ export default function HeroSlider({ data }: { data: HeroSliderData }) {
                       width: 320,
                       height: 320,
                       background: "rgba(92, 68, 216, 0.12)",
-                      top: "-80px",
+                      top: "-50px",
                       left: "-60px",
                       pointerEvents: "none",
                     }}
@@ -180,89 +186,58 @@ export default function HeroSlider({ data }: { data: HeroSliderData }) {
                     {/* Left Content */}
                     <div className="col-lg-6">
                       <h1
-                        className="fw-bold mb-3"
+                        className={`fw-bold mb-3 ${styles.heading}`}
                         style={{
-                          fontSize: "clamp(28px, 4vw, 52px)",
+                          // fontSize and media query moved to CSS module
                           lineHeight: "1.2",
                         }}
                       >
                         {slide.title}{" "}
-                        <span style={{ color: "#5C44D8" }}>
+                        <span style={{ color: "#547cd3" }}>
                           {slide.highlighted_text}
                         </span>
                       </h1>
                       <p
-                        className="text-secondary mb-4"
+                        className={`text-secondary mb-4 ${styles.description}`}
                         style={{
-                          fontSize: "20px",
-                          lineHeight: "1.7",
-                          color: "#1F2937",
+                          // Static styles moved to CSS module
                         }}
                       >
                         {slide.description}
                       </p>
-                      <div className="d-flex gap-3 flex-wrap ">
+                      <div className={styles.btnGroup}>
                         <Link
                           href={slide.primary_btn_url || "#"}
-                          className="btn  rounded-pill px-4 py-2"
-                          style={{ background: "linear-gradient(135deg, #5C44D8, #a855f7)  ", color: "#fff", alignItems: "center", width: "157px", height: "48px", display: "flex", justifyContent: "center" }}
+                          className={`btn rounded-pill ${styles.primaryBtn}`}
                         >
                           {slide.primary_btn_label}
                         </Link>
                         <Link
                           href={slide.secondary_btn_url || "#"}
-                          className="btn rounded-pill px-4 py-2"
-                          style={{
-                            border: "2px solid #9333EA",
-                            color: "#000",
-                            backgroundColor: "transparent",
-                            alignItems: "center",
-                            width: "211px",
-                             display: "flex",
-                             height: "48px",
-                            justifyContent: "center",
-                          }}
+                          className={`btn rounded-pill ${styles.secondaryBtn}`}
                         >
                           {slide.secondary_btn_label}
-                        </Link>{" "}
+                        </Link>
                       </div>
                     </div>
 
                     {/* Right Image with Stats Overlay */}
-                    <div className="col-lg-6 text-center">
+                    <div className={`col-lg-6 text-center ${styles.gap3}`}>
                       {slide.image?.url && (
                         <div className="position-relative d-inline-block w-100">
                           <img
                             src={`${STRAPI_URL}${slide.image.url}`}
                             alt={slide.image.alternativeText || slide.title}
-                            className="img-fluid rounded-4"
-                            style={{
-                              maxHeight: "350px",
-                              objectFit: "cover",
-                              width: "100%",
-                              display: "block",
-                            }}
+                            className={`img-fluid rounded-4 ${styles.heroImage}`}
                           />
                           {slide.stats.length > 0 && (
                             <div
-                              className="position-absolute bottom-0 start-0 end-0 d-flex"
-                              style={{
-                                background: "rgba(30, 20, 60, 0.92)",
-                                borderTop: "1px solid rgba(168, 85, 247, 0.3)",
-                                borderRadius: "0 0 16px 16px",
-                                overflow: "hidden",
-                              }}
+                              className={`position-absolute bottom-0 start-0 end-0 d-flex ${styles.statsOverlay}`}
                             >
                               {slide.stats.map((stat) => (
                                 <div
                                   key={stat.id}
-                                  className="flex-fill text-center py-3"
-                                  style={{
-  backgroundColor: "rgba(23, 19, 191, 0.7)"
-                                    // backdropFilter: "blur(4px)",
-                                    // borderRight:
-                                      // "1px solid rgba(255,255,255,0.1)",
-                                  }}
+                                  className={`flex-fill text-center py-3 ${styles.statItem}`}
                                 >
                                   <div
                                     className="fw-bold text-white"
@@ -273,7 +248,7 @@ export default function HeroSlider({ data }: { data: HeroSliderData }) {
                                   <div
                                     style={{
                                       fontSize: "12px",
-                                      color: "rgba(255,255,255,0.8)",
+                                      color: "rgba(255, 255, 255, 1)",
                                     }}
                                   >
                                     {stat.label}
@@ -293,44 +268,23 @@ export default function HeroSlider({ data }: { data: HeroSliderData }) {
 
           {/* Controls */}
           <button
-            className="carousel-control-prev"
+            className={`carousel-control-prev ${styles.carouselPrev}`}
             type="button"
             data-bs-target="#heroCarousel"
             data-bs-slide="prev"
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "12px",
-              transform: "translateY(-50%)",
-              width: "48px",
-              height: "48px",
-              backgroundColor: "rgba(0,0,0,0.4)",
-              borderRadius: "50%",
-            }}
           >
             <span className="carousel-control-prev-icon" />
           </button>
           <button
-            className="carousel-control-next"
+            className={`carousel-control-next ${styles.carouselNext}`}
             type="button"
             data-bs-target="#heroCarousel"
             data-bs-slide="next"
-            style={{
-              position: "absolute",
-              top: "50%",
-              right: "12px",
-              left: "auto",
-              transform: "translateY(-50%)",
-              width: "48px",
-              height: "48px",
-              backgroundColor: "rgba(0,0,0,0.4)",
-              borderRadius: "50%",
-            }}
           >
             <span className="carousel-control-next-icon" />
           </button>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

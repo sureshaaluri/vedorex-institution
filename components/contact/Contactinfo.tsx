@@ -35,7 +35,7 @@ export default function ContactInfo({ data }: { data: ContactInfoData }) {
         <div className="text-center mb-5">
           <h2 className="fw-bold">
             {data.heading}{" "}
-            <span style={{ color: "#5C44D8" }}>{data.subheading}</span>
+            <span style={{ color: "#547cd3" }}>{data.subheading}</span>
           </h2>
           <p className="text-muted mx-auto" style={{ maxWidth: "600px" }}>
             {data.description}

@@ -3,7 +3,6 @@
 import { getContactData } from "@/lib/api";
 import Herosection from "@/components/contact/Herosection";
 import ContactForm from "@/components/contact/Contactform";
-import ContactInfo from "@/components/contact/Contactinfo";
 import Mapsection from "@/components/contact/Mapsection";
 
 export default async function ContactPage() {
@@ -23,8 +22,7 @@ export default async function ContactPage() {
             return <Herosection key={`hero-${index}`} data={section} />;
             //                  ↑ unique key
 
-          case "contact.contact-info":
-            return <ContactInfo key={`info-${index}`} data={section} />;
+    
 
   
           case "contact.contact-form":

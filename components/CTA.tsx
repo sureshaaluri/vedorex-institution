@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 interface CTAData {
   __component: "section.cta";
@@ -10,9 +13,13 @@ interface CTAData {
 
 export default function CTA({ data }: { data: CTAData }) {
   return (
-    <section
+    <motion.section
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ amount: 0.2 }}
+      transition={{ duration: 0.6 }}
       style={{
-        background: "#e5e7eb",
+        background: "#F0EEFF",
         padding: "60px clamp(16px, 6vw, 80px)",
         position: "relative",
         overflow: "hidden",
@@ -55,6 +62,6 @@ export default function CTA({ data }: { data: CTAData }) {
       >
         {data.Button}
       </Link>
-    </section>
+    </motion.section>
   );
 }

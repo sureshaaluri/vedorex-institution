@@ -20,8 +20,8 @@ export default function Mentors({ data }: { data: MentorData }) {
             </p>
 
             {/* Mentor Cards */}
-            <div className="d-flex flex-wrap gap-3 mb-4">
-              {data.mentors?.map((mentorData) => (
+            <div className="d-flex gap-4 mb-2 mt-5">
+              {data.mentors?.map((mentorData: any) => (
                 <div key={mentorData.id} className={styles.card}>
 
                   {mentorData.image?.url ? (

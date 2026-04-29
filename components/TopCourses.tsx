@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const STRAPI_URL = "http://localhost:1337";
 
@@ -30,185 +31,320 @@ const LEVEL_COLORS: Record<string, string> = {
   Advanced: "#ef4444",
 };
 
-export default function TopCourses({ data }: { data: TopCoursesData }) {
+const styles = `
+  .top-courses-wrapper {
+    max-width: 1920px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #F0EEFF;
+    padding: 20px clamp(16px, 4vw, 50px);
+  }
+
+  .top-courses-header {
+    margin-bottom: 10px;
+  }
+
+  .top-courses-header h2 {
+    font-weight: 700;
+    color: #547cd3;
+    margin-bottom: 0.5rem;
+    font-size: clamp(1.2rem, 3vw, 2rem);
+  }
+
+  .top-courses-header p {
+    color: #6b7280;
+    margin: 0;
+    font-size: clamp(13px, 2vw, 16px);
+  }
+
+  /* ── Grid: 3 col desktop ── */
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* ── 2 col tablet ── */
+  @media (max-width: 991px) {
+    .courses-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+  }
+
+  /* ── 1 col small tablet ── */
+  @media (max-width: 600px) {
+    .courses-grid {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 1rem;
+    }
+  }
+
+  /* ── Horizontal scroll on mobile ── */
+  @media (max-width: 425px) {
+    .courses-grid {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      gap: 0.75rem;
+      padding-bottom: 12px;
+     
+      /* hide scrollbar */
+      scrollbar-width: none;
+    }
+
+    .courses-grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    .course-card-wrapper {
+      min-width: 75vw;
+      max-width: 75vw;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+    }
+  }
+
+  /* ── Card ── */
+  .course-card {
+    width: 100%;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .course-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(92,68,216,0.15);
+  }
+
+  /* ── Thumbnail ── */
+  .course-thumbnail {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .course-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+
+  .course-thumbnail-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #5C44D8, #a855f7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+  }
+
+  /* ── Content ── */
+  .course-content {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    box-sizing: border-box;
+  }
+
+  .course-title {
+    font-weight: 700;
+    font-size: clamp(13px, 1.5vw, 15px);
+    line-height: 1.5;
+    margin: 0 0 0.6rem 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .course-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: clamp(10px, 1.2vw, 12px);
+    color: #6b7280;
+    margin-bottom: 0.75rem;
+  }
+
+  .course-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+  }
+
+  .course-btn {
+    background: linear-gradient(80deg, #5C44D8, #a855f7);
+    color: #fff;
+    font-size: clamp(11px, 1.2vw, 13px);
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── Rating circle ── */
+  .rating-circle {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .rating-glow {
+    position: absolute;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: #fef9c3;
+  }
+
+  .rating-svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  .rating-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+    position: relative;
+    z-index: 1;
+  }
+
+  .rating-star {
+    position: absolute;
+    top: 1px;
+    right: 0;
+  }
+`;
+
+function CourseCardItem({ card }: { card: CourseCard }) {
+  const circumference = 2 * Math.PI * 45;
+  const strokeDasharray = `${(card.rating / 5) * circumference} ${circumference}`;
+
   return (
-    <section>
-      <div
-        style={{
-          maxWidth: "1920px",
-          margin: "0 auto",
-          width: "100%",
-          overflow: "hidden",
-          boxSizing: "border-box",
-          backgroundColor: "#d1d5db",
-          padding: "20px clamp(16px, 4vw, 50px)",
-        }}
-      >
-        {/* Header */}
-        <div className=" mb-5">
-          <h2 className="fw-bold mb-2" style={{ color: "#5C44D8" }}>
-            {data.title}
-          </h2>
-          <p className="text-secondary mb-0" style={{  margin: "0 auto" }}>
-            {data.subtitle}
-          </p>
+    <div className="course-card">
+      <div className="course-thumbnail">
+        {card.thumbnail?.url ? (
+          <img
+            src={`${STRAPI_URL}${card.thumbnail.url}`}
+            alt={card.thumbnail.alternativeText || card.name}
+          />
+        ) : (
+          <div className="course-thumbnail-placeholder">No Image</div>
+        )}
+      </div>
+
+      <div className="course-content">
+        <h6 className="course-title">{card.name}</h6>
+
+        <div className="course-meta">
+          <span>🖥 Lesson: {card.lessons}</span>
+          <span>👤 Student: {card.students}</span>
+          <span style={{ color: LEVEL_COLORS[card.level] }}>🏆 {card.level}</span>
         </div>
 
-        {/* Cards */}
-        <div className="row g-4 justify-content-center py-2">
-          {data.coursecard.map((card) => {
-            const circumference = 2 * Math.PI * 45;
-            const strokeDasharray = `${(card.rating / 5) * circumference} ${circumference}`;
+        <div className="course-footer">
+          <Link href={card.courese_url} className="course-btn">
+            <span>{card.course_btn}</span>
+            <span style={{ fontSize: 16 }}>›</span>
+          </Link>
 
-            return (
-              <div key={card.id} className="col-sm-6 col-lg-4">
-                <div
-                  className="h-100 rounded-4 d-flex flex-column overflow-hidden"
-                  style={{
-                    backgroundColor: "#fff",
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-                    transition: "transform 0.2s, box-shadow 0.2s",
-                  }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)";
-                    (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 24px rgba(92,68,216,0.15)";
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
-                    (e.currentTarget as HTMLDivElement).style.boxShadow = "0 2px 12px rgba(0,0,0,0.06)";
-                  }}
-                >
-                  {/* Thumbnail */}
-                  <div style={{ position: "relative", height: 200, overflow: "hidden" }}>
-                    {card.thumbnail?.url ? (
-                      <img
-                        src={`${STRAPI_URL}${card.thumbnail.url}`}
-                        alt={card.thumbnail.alternativeText || card.name}
-                        style={{ width: "100%", height: "100%", objectFit: "cover", padding: "10px" }}
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          width: "100%", height: "100%",
-                          background: "linear-gradient(135deg, #5C44D8, #a855f7)",
-                          display: "flex", alignItems: "center",
-                          justifyContent: "center", color: "#fff", fontSize: 14,
-                        }}
-                      >
-                        No Image
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-3 d-flex flex-column grow py-1">
-
-                    {/* Title */}
-                    <h6
-                      className="fw-bold mb-3"
-                      style={{
-                        fontSize: 15, lineHeight: 1.5,
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                      }}
-                    >
-                      {card.name}
-                    </h6>
-
-                    {/* Meta */}
-                    <div
-                      className="d-flex align-items-center gap-5 mb-3"
-                      style={{ fontSize: 12, color: "#6b7280" }}
-                    >
-                      <span>🖥 Lesson: {card.lessons}</span>
-                      <span>👤 Student: {card.students}</span>
-                      <span style={{ color: LEVEL_COLORS[card.level] }}>
-                        🏆 {card.level}
-                      </span>
-                    </div>
-
-                    {/* Button + Rating */}
-                    <div className="d-flex align-items-center justify-content-between mt-auto gap-2">
-
-                      {/* Button */}
-                      <Link
-                        href={card.courese_url}
-                        className="btn rounded text-decoration-none  d-flex align-items-center justify-content-between px-4"
-                        style={{
-                          background: "linear-gradient(80deg, #5C44D8, #a855f7)",
-                          color: "#fff",
-                          fontSize: 13,
-                          border: "none",
-                          padding: "10px 16px",
-                          gap: 8,
-                        }}
-                      >
-                        <span>{card.course_btn}</span>
-                        <span style={{ fontSize: 16 }}>&#8250;</span>
-                      </Link>
-
-                      {/* Rating Circle with glow */}
-                      <div style={{
-                        position: "relative",
-                        width: "70px",
-                        height: "70px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                      }}>
-                        {/* Yellow glow background */}
-                        <div style={{
-                          position: "absolute",
-                          width: "54px",
-                          height: "54px",
-                          borderRadius: "50%",
-                          backgroundColor: "#fef9c3",
-                        }} />
-
-                        <svg
-                          style={{ position: "absolute", width: "100%", height: "100%", transform: "rotate(-90deg)" }}
-                          viewBox="0 0 100 100"
-                        >
-                          <circle cx="50" cy="50" r="40" fill="none" stroke="#fde68a" strokeWidth="6" />
-                          <defs>
-                            <linearGradient id={`grad-${card.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
-                              <stop offset="0%" stopColor="#fde5d0" />
-                              <stop offset="100%" stopColor="#f9a825" />
-                            </linearGradient>
-                          </defs>
-                          <circle
-                            cx="50" cy="50" r="40"
-                            fill="none"
-                            stroke={`url(#grad-${card.id})`}
-                            strokeWidth="6"
-                            strokeLinecap="round"
-                            strokeDasharray={strokeDasharray}
-                          />
-                        </svg>
-
-                        {/* Number */}
-                        <span style={{ fontSize: "16px", fontWeight: "700", color: "#111", zIndex: 1 }}>
-                          {card.rating}
-                        </span>
-                        {/* Star */}
-                        <div style={{ position: "absolute", top: "2px", right: "0px" }}>
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="#f9a825">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                          </svg>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          <div className="rating-circle">
+            <div className="rating-glow" />
+            <svg className="rating-svg" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="40" fill="none" stroke="#fde68a" strokeWidth="6" />
+              <defs>
+                <linearGradient id={`grad-${card.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#fde5d0" />
+                  <stop offset="100%" stopColor="#f9a825" />
+                </linearGradient>
+              </defs>
+              <circle
+                cx="50" cy="50" r="40" fill="none"
+                stroke={`url(#grad-${card.id})`}
+                strokeWidth="6" strokeLinecap="round"
+                strokeDasharray={strokeDasharray}
+              />
+            </svg>
+            <span className="rating-value">{card.rating}</span>
+            <div className="rating-star">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#f9a825">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
+  );
+}
+
+export default function TopCourses({ data }: { data: TopCoursesData }) {
+  return (
+    <>
+      <style>{styles}</style>
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ amount: 0.2 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="top-courses-wrapper">
+          <div className="top-courses-header">
+            <h2>{data.title}</h2>
+            <p>{data.subtitle}</p>
+          </div>
+
+          <div className="courses-grid">
+            {data.coursecard.map((card) => (
+              <motion.div
+                key={card.id}
+                className="course-card-wrapper"
+                variants={{
+                  hidden: { opacity: 0, y: 40, scale: 0.9 },
+                  show: {
+                    opacity: 1, y: 0, scale: 1,
+                    transition: { type: "spring", stiffness: 100, damping: 12 },
+                  },
+                }}
+              >
+                <CourseCardItem card={card} />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+    </>
   );
 }

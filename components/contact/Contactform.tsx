@@ -1,6 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import styles from "./Contactform.module.css";
+
+interface Course {
+  id: number;
+  title: string;
+}
 
 interface FormData {
   id: number;
@@ -9,49 +15,118 @@ interface FormData {
   Firstname_placeholder: string;
   lastname_placeholder: string;
   emailaddress_placeholder: string;
-  subject_placeholder: string;
-  your_message: string;
+  PhoneNumber_placeholder: string;
+  course_placeholder: string;
   button_text: string;
+  image?: {
+    data?: {
+      attributes: {
+        url: string;
+      };
+    };
+  };
 }
 
 export default function ContactForm({ data }: { data: FormData }) {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const [formValues, setFormValues] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    subject: "",
-    message: "",
+    phone: "",
+    courses: [] as number[],
   });
 
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  // Fetch courses
+  useEffect(() => {
+    const url = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/coursespages?fields[0]=title`;
+    fetch(url)
+      .then((res) => res.json())
+      .then((json) => setCourses(json.data))
+      .catch((err) => console.error("Fetch error:", err));
+  }, []);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form submitted:", formValues);
+  const toggleCourse = (id: number) => {
+    setFormValues((prev) => ({
+      ...prev,
+      courses: prev.courses.includes(id)
+        ? prev.courses.filter((c) => c !== id)
+        : [...prev.courses, id],
+    }));
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("loading");
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/enrollments`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            data: {
+              first_name: formValues.firstName,
+              last_name: formValues.lastName,
+              email: formValues.email,
+              phone: formValues.phone,
+              courses: formValues.courses,
+            },
+          }),
+        }
+      );
+
+      if (res.ok) {
+        setStatus("success");
+        setFormValues({ firstName: "", lastName: "", email: "", phone: "", courses: [] });
+        setDropdownOpen(false);
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  const imageUrl =
+    data.image?.data?.attributes?.url
+      ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${data.image.data.attributes.url}`
+      : "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80";
 
   return (
     <section className="py-5" style={{ backgroundColor: "#f8f9fa" }}>
       <div className="container">
-        <div className="row align-items-stretch g-5"> {/* ✅ align-items-stretch */}
+        <div className="row align-items-stretch g-5" >
 
           {/* ===== Left — Image ===== */}
           <div className="col-12 col-lg-5">
             <img
-              src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80"
+              src={imageUrl}
               alt="Contact"
-              className="img-fluid rounded-4 shadow"
-              style={{
-                width: "100%",
-                height: "100%",        // ✅ match parent height
-                minHeight: "300px",    // ✅ min height on mobile
-                maxHeight: "400px",    // ✅ max height on desktop
-                objectFit: "cover",
-              }}
+              className={`img-fluid rounded-4 shadow ${styles.contactImage}`}
             />
           </div>
 
@@ -60,10 +135,10 @@ export default function ContactForm({ data }: { data: FormData }) {
 
             {/* Tag Label */}
             <div className="d-flex align-items-center gap-2 mb-2">
-              <div style={{ width: "40px", height: "2px", backgroundColor: "#5C44D8" }} />
+              <div style={{ width: "40px", height: "2px", backgroundColor: "#547cd3" }} />
               <span
                 className="text-uppercase fw-semibold"
-                style={{ color: "#5C44D8", fontSize: "13px", letterSpacing: "2px" }}
+                style={{ color: "#547cd3", fontSize: "13px", letterSpacing: "2px" }}
               >
                 {data.tag_label}
               </span>
@@ -79,12 +154,26 @@ export default function ContactForm({ data }: { data: FormData }) {
               ))}
             </h2>
 
+            {/* Success Message */}
+            {status === "success" && (
+              <div className="alert alert-success mb-3" role="alert">
+                ✅ Enrollment request sent! We will get back to you soon.
+              </div>
+            )}
+
+            {/* Error Message */}
+            {status === "error" && (
+              <div className="alert alert-danger mb-3" role="alert">
+                ❌ Something went wrong. Please try again.
+              </div>
+            )}
+
             {/* Form */}
             <form onSubmit={handleSubmit}>
 
               {/* First Name & Last Name */}
               <div className="row g-3 mb-3">
-                <div className="col-12 col-sm-6">  {/* ✅ col-sm instead of col-md */}
+                <div className="col-12 col-sm-6">
                   <input
                     type="text"
                     name="firstName"
@@ -110,9 +199,9 @@ export default function ContactForm({ data }: { data: FormData }) {
                 </div>
               </div>
 
-              {/* Email & Subject */}
+              {/* Email & Phone */}
               <div className="row g-3 mb-3">
-                <div className="col-12 col-sm-6">  {/* ✅ col-sm instead of col-md */}
+                <div className="col-12 col-sm-6">
                   <input
                     type="email"
                     name="email"
@@ -126,50 +215,131 @@ export default function ContactForm({ data }: { data: FormData }) {
                 </div>
                 <div className="col-12 col-sm-6">
                   <input
-                    type="text"
-                    name="subject"
+                    type="tel"
+                    name="phone"
                     className="form-control py-2"
-                    placeholder={data.subject_placeholder}
-                    value={formValues.subject}
+                    placeholder={data.PhoneNumber_placeholder}
+                    value={formValues.phone}
                     onChange={handleChange}
-                    required
                     style={{ borderRadius: "8px" }}
                   />
                 </div>
               </div>
 
-              {/* Message */}
-              <div className="mb-4">
-                <textarea
-                  name="message"
-                  className="form-control py-2"
-                  placeholder={data.your_message}
-                  rows={5}
-                  value={formValues.message}
-                  onChange={handleChange}
-                  required
-                  style={{ borderRadius: "8px" }}
-                />
+              {/* Course Multi-Select Dropdown */}
+              <div className="mb-4" style={{ position: "relative" }} ref={dropdownRef}>
+
+                {/* Trigger */}
+                <div
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  style={{
+                    border: "1px solid #dee2e6",
+                    borderRadius: dropdownOpen ? "8px 8px 0 0" : "8px",
+                    padding: "10px 12px",
+                    cursor: "pointer",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    backgroundColor: "#fff",
+                    fontSize: "14px",
+                    color: formValues.courses.length ? "#212529" : "#6c757d",
+                  }}
+                >
+                  <span>
+                    {formValues.courses.length
+                      ? `${formValues.courses.length} course(s) selected`
+                      : data.course_placeholder || "-- Select Courses --"}
+                  </span>
+                  <svg
+                    width="12" height="12" viewBox="0 0 12 12" fill="none"
+                    style={{
+                      transform: dropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
+                      transition: "transform 0.2s",
+                    }}
+                  >
+                    <path d="M2 4L6 8L10 4" stroke="#6c757d" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+
+                {/* Dropdown List */}
+                {dropdownOpen && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "100%",
+                      left: 0,
+                      right: 0,
+                      border: "1px solid #dee2e6",
+                      borderTop: "none",
+                      borderRadius: "0 0 8px 8px",
+                      backgroundColor: "#fff",
+                      zIndex: 999,
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                    }}
+                  >
+                    {courses.map((course) => {
+                      const isSelected = formValues.courses.includes(course.id);
+                      return (
+                        <div
+                          key={course.id}
+                          onClick={() => toggleCourse(course.id)}
+                          style={{
+                            padding: "10px 16px",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                            fontSize: "14px",
+                            backgroundColor: isSelected ? "#f0edff" : "#fff",
+                            color: isSelected ? "#5C44D8" : "#212529",
+                            borderBottom: "1px solid #f1f1f1",
+                          }}
+                        >
+                          {/* Custom Checkbox */}
+                          <div style={{
+                            width: "16px",
+                            height: "16px",
+                            borderRadius: "4px",
+                            border: isSelected ? "2px solid #5C44D8" : "2px solid #dee2e6",
+                            backgroundColor: isSelected ? "#5C44D8" : "#fff",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                          }}>
+                            {isSelected && (
+                              <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                                <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                            )}
+                          </div>
+                          {course.title}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
               {/* Submit Button */}
               <button
                 type="submit"
                 className="btn w-100 py-3 text-white fw-bold"
+                disabled={status === "loading"}
                 style={{
                   background: "linear-gradient(135deg, #5C44D8, #a855f7)",
                   border: "none",
                   borderRadius: "8px",
                   fontSize: "14px",
                   letterSpacing: "1px",
+                  opacity: status === "loading" ? 0.7 : 1,
                 }}
               >
-                {data.button_text}
+                {status === "loading" ? "Sending..." : data.button_text}
               </button>
 
             </form>
           </div>
-
         </div>
       </div>
     </section>

@@ -1,31 +1,63 @@
 .statsSection {
   background: linear-gradient(135deg, #1E3A8A 0%, #2952e3 100%);
+  padding: 60px clamp(16px, 4vw, 80px);
+  box-sizing: border-box;
 }
 
-/* Top Tag */
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── Top Tag ── */
+.tagWrapper {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
 .tag {
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
-/* Heading */
+/* ── Heading ── */
 .heading {
   font-family: "Manrope", sans-serif;
   font-size: 2.2rem;
   color: white;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 40px;
 }
 
-/* Card */
+/* ── Stat Cards Grid ── */
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
 .cardBox {
   background: rgba(255, 255, 255, 0.13);
   backdrop-filter: blur(6px);
   border-radius: 20px;
   padding: 20px;
   height: 100%;
+  box-sizing: border-box;
 }
 
-/* Icon Box */
+/* ── Icon + Number row ── */
+.cardTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
 .iconBox {
   width: 52px;
   height: 52px;
@@ -34,52 +66,69 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
 }
 
-/* Number */
 .statNumber {
   font-family: "Manrope", sans-serif;
   font-size: 2rem;
   color: white;
   font-weight: bold;
+  margin: 0;
 }
 
-/* Label */
 .statLabel {
   color: rgba(255, 255, 255, 0.95);
   font-weight: bold;
+  margin: 0 0 8px;
+  font-size: 15px;
 }
 
-/* Description */
 .statDesc {
   font-size: 0.82rem;
   color: rgba(255, 255, 255, 0.65);
   line-height: 1.6;
   white-space: pre-line;
+  margin: 0;
 }
 
-/* Divider */
+/* ── Divider ── */
 .divider {
-  border-color: rgba(255, 255, 255, 0.2);
+  border: 0;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 0 0 24px;
 }
 
-/* Bottom Numbers */
+/* ── Bottom Row ── */
+.bottomGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  text-align: center;
+}
+
 .bottomNumber {
   font-family: "Manrope", sans-serif;
   font-size: 1.6rem;
   color: white;
   font-weight: bold;
+  margin: 0 0 4px;
 }
 
 .bottomLabel {
   font-size: 0.82rem;
   color: rgba(255, 255, 255, 0.65);
+  margin: 0;
 }
 
-/* ================= RESPONSIVE ================= */
-
-/* Tablet */
+/* ── Tablet (768px) ── */
 @media (max-width: 768px) {
+  .cardsGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
   .heading {
     font-size: 1.8rem;
   }
@@ -87,9 +136,35 @@
   .statNumber {
     font-size: 1.6rem;
   }
+
+  .bottomGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
 }
 
-/* Mobile (375px) */
+/* ── Mobile (425px) ── */
+@media (max-width: 425px) {
+  .statsSection {
+    padding: 40px 16px;
+  }
+
+  .cardsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .heading {
+    font-size: 1.6rem;
+  }
+    .bottomGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+}
+
+/* ── Small Mobile (375px) ── */
 @media (max-width: 375px) {
   .heading {
     font-size: 1.5rem;
@@ -102,9 +177,14 @@
   .bottomNumber {
     font-size: 1.3rem;
   }
+    .bottomGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
 }
 
-/* Small Mobile (320px) */
+/* ── Extra Small (320px) ── */
 @media (max-width: 320px) {
   .heading {
     font-size: 1.3rem;
@@ -117,4 +197,9 @@
   .bottomLabel {
     font-size: 0.75rem;
   }
+    .bottomGrid {
+    grid-template-columns: repeat(2, 1fr);
+    /* gap: 20px; */
+  }
+
 }

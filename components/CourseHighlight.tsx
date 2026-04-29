@@ -1,4 +1,7 @@
+"use client";
+
 import styles from "./CourseHighlight.module.css";
+import { motion } from "framer-motion";
 const STRAPI_URL = "http://localhost:1337";
 
 interface Feature {
@@ -24,7 +27,12 @@ interface CourseHighlightData {
 
 export default function CourseHighlight({ data }: { data: CourseHighlightData }) {
   return (
-    <section>
+    <motion.section
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ amount: 0.2 }}
+      transition={{ duration: 0.6 }}
+    >
       <div className={styles.section}>
         <div className={styles.row}>
 
@@ -68,6 +76,6 @@ export default function CourseHighlight({ data }: { data: CourseHighlightData })
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

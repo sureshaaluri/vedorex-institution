@@ -4,6 +4,8 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Nunito } from "next/font/google";
+import WelcomePopup from "@/components/WelcomePopup";
+import { getPopupData } from "@/lib/getPopupData";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -31,12 +33,14 @@ async function getFooterData() {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const navbarData = await getNavbarData();
   const footerData = await getFooterData();
-  console.log("Footer data in layout:", footerData); // ← log after await
+  const popupData = await getPopupData();
+  console.log("popupdata", popupData); // ← log after await
 
   return (
-    <html lang="en">
+    <html lang="en" style={{ scrollbarWidth: "thin", scrollbarColor: "transparent transparent" }}>
       <body className={nunito.className}>
         <Navbar data={navbarData} />
+        <WelcomePopup data={popupData} />
         {children}
         <Footer footerData={footerData} />
         <Script

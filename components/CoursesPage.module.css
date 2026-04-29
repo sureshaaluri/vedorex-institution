@@ -16,8 +16,7 @@
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(17, 91, 210, 0.55); /* blue overlay */
-
+  background: rgba(127, 167, 230, 0.55);
 }
 
 .heroContent {
@@ -38,7 +37,7 @@
 .heroSubtitle {
   font-size: 2.4rem;
   font-weight: 800;
-  color: #a855f7;
+  color: #547cd3;
   margin: 0 0 20px 0;
   line-height: 1.2;
 }
@@ -100,33 +99,46 @@
   border-color: white;
 }
 
+/* ── Courses Section ── */
 .coursesSection {
   display: grid;
   grid-template-columns: 350px 1fr;
   min-height: 600px;
-  padding: 0px 50px  ;
+  padding: 24px 50px;
+  gap: 24px;
+  border-radius: 20px;
 }
 
 .sidebar {
-  background: #f8f9fa;
-  border-right: 1px solid #e0e0e0;
+  border-right: none;
   overflow-y: auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .card {
-  padding: 20px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 18px 20px;
+  margin-top: 2px;
+  border-left: 3px solid transparent;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
 }
 
 .card:hover {
-  background: #f0f0f0;
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(108, 99, 255, 0.3);
+  transform: translateY(-1px);
 }
 
 .card.active {
-  background: #fff;
-  border-left: 4px solid #6c63ff;
+  background: rgba(108, 99, 255, 0.12);
+  border-color: rgba(108, 99, 255, 0.5);
+  border-left-color: rgba(108, 99, 255, 0.5);
 }
 
 .cardTop {
@@ -164,7 +176,11 @@
 }
 
 .detail {
-  padding: 40px;
+  padding: 32px 36px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  overflow-y: auto;
 }
 
 .detailHeader {
@@ -230,11 +246,11 @@
 .enrollBtn:hover {
   background: #5a52d5;
 }
-/* LEARNING PATH */
+
+/* ── Learning Path ── */
 .learningPath {
   padding: 32px 50px;
   background: #fff;
-  border-bottom: 1px solid #e0e0e0;
 }
 
 .learningPath h2 {
@@ -273,19 +289,10 @@
   transition: all 0.2s;
 }
 
-
-
-/* Dot before each step title */
-.routeStep:first-child .stepTitle::before {
-  font-size: 1.2rem;
-  color: white;
-}
-
 .stepTitle:hover {
   border-color: #6c63ff;
   color: #ffffff;
   background-color: #6c63ff;
-
 }
 
 .arrow {
@@ -294,22 +301,382 @@
   padding: 0 8px;
   color: #ccc;
   font-size: 0.75rem;
-  /* dashed line effect */
   letter-spacing: 2px;
 }
-/* ── Tablet (768px) ── */
-@media (max-width: 768px) {
+
+/* ================================================================
+   RESPONSIVE MEDIA QUERIES
+   ================================================================ */
+
+/* ── Large Desktop (1280px+): default styles above apply ── */
+
+/* ── Desktop / Small Desktop (1024px) ── */
+@media (max-width: 1024px) {
   .coursesSection {
-    grid-template-columns: 1fr;
+    grid-template-columns: 300px 1fr;
+    padding: 20px 32px;
   }
-  .hero {
-    min-height: unset;
-   
+
+  .heroTitle {
+    font-size: 2.2rem;
+  }
+
+  .heroSubtitle {
+    font-size: 2rem;
+  }
+
+  .detail {
+    padding: 24px 28px;
+  }
+
+  .detail h2 {
+    font-size: 1.6rem;
+  }
+
+  .learningPath {
+    padding: 24px 32px;
   }
 }
-@media (max-width: 425px) {
+
+/* ── Tablet landscape (991px) ── */
+@media (max-width: 991px) {
+  .coursesSection {
+    grid-template-columns: 260px 1fr;
+    padding: 16px 24px;
+    gap: 16px;
+  }
+
+  .heroTitle {
+    font-size: 2rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.8rem;
+  }
+
   .stats {
-    flex-direction: column;
+    gap: 32px;
+  }
+
+  .topics {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ── Tablet portrait (768px): stack sidebar above detail ── */
+@media (max-width: 768px) {
+  .hero {
+    min-height: unset;
+    padding: 48px 24px;
+  }
+
+  .heroTitle {
+    font-size: 1.8rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.6rem;
+  }
+
+  .heroDescription {
+    font-size: 0.9rem;
+  }
+
+  .stats {
     gap: 24px;
   }
+
+  .stats strong {
+    font-size: 1.5rem;
+  }
+
+  /* Sidebar becomes horizontal scroll row on tablet */
+  .coursesSection {
+    grid-template-columns: 1fr;
+    padding: 16px 20px;
+    gap: 16px;
+    min-height: unset;
+  }
+
+  .sidebar {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: visible;
+    gap: 10px;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+
+  .sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .card {
+    min-width: 220px;
+    flex-shrink: 0;
+  }
+
+  .detail {
+    padding: 20px 20px;
+  }
+
+  .detail h2 {
+    font-size: 1.4rem;
+  }
+
+  .topics {
+    grid-template-columns: 1fr;
+  }
+
+  /* .learningPath {
+    padding: 20px 20px;
+    overflow-x: auto;
+    white-space: nowrap;
+ 
+  } */
+
+  .routepath {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    display: flex;
+    white-space: nowrap;
+    align-items: center;
+    gap: 0;
+
+
+  }
+
+  .routeStep {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+}
+
+/* ── Mobile (425px) ── */
+@media (max-width: 425px) {
+  .hero {
+    padding: 40px 16px;
+  }
+
+  .heroTitle {
+    font-size: 1.5rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.3rem;
+  }
+
+  .heroDescription {
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+
+  .stats {
+    /* flex-direction: column; */
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stats strong {
+    font-size: 1.4rem;
+  }
+
+  .ctaBtn {
+    width: 100%;
+    padding: 12px 20px;
+  }
+
+  .coursesSection {
+    padding: 12px 16px;
+    border-radius: 12px;
+  }
+
+  .card {
+    min-width: 180px;
+    padding: 14px 16px;
+  }
+
+  .card h3 {
+    font-size: 0.9rem;
+  }
+
+  .detail {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .detail h2 {
+    font-size: 1.2rem;
+  }
+
+  .detail p {
+    font-size: 0.9rem;
+  }
+
+  .detailMeta {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .enrollBtn {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 0.95rem;
+  }
+
+  .learningPath {
+    padding: 16px 16px;
+  }
+
+  .stepTitle {
+    font-size: 0.78rem;
+    padding: 6px 14px;
+    width: 128px;
+    height: 38px;
+  }
+}
+
+/* ── Small Mobile (375px) ── */
+@media (max-width: 375px) {
+  .heroTitle {
+    font-size: 1.3rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.2rem;
+  }
+
+  .card {
+    min-width: 160px;
+    padding: 12px 14px;
+  }
+
+  .detail h2 {
+    font-size: 1.1rem;
+  }
+}
+
+/* ── Extra Small (320px) ── */
+@media (max-width: 320px) {
+  .hero {
+    padding: 32px 12px;
+  }
+
+  .heroTitle {
+    font-size: 1.2rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.1rem;
+  }
+
+  .stats strong {
+    font-size: 1.2rem;
+  }
+
+  .coursesSection {
+    padding: 10px 12px;
+  }
+
+  .card {
+    min-width: 150px;
+    padding: 10px 12px;
+  }
+
+  .detail {
+    padding: 12px;
+  }
+
+  .detail h2 {
+    font-size: 1rem;
+  }
+
+  .enrollBtn {
+    font-size: 0.85rem;
+    padding: 10px 16px;
+  }
+}
+
+
+
+
+/* ── NESTED LESSON ACCORDION ── */
+.lessonAccordionItem {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 6px;
+  transition: border-color 0.2s;
+}
+
+.lessonAccordionOpen {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.lessonAccordionHeader {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.lessonAccordionIcon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.4);
+  transition: all 0.2s;
+}
+
+.lessonAccordionOpen .lessonAccordionIcon {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.lessonAccordionTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  flex: 1;
+  transition: color 0.2s;
+}
+
+.lessonAccordionOpen .lessonAccordionTitle {
+  color: #fff;
+}
+
+.lessonAccordionNum {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+}
+
+.lessonAccordionBody {
+  padding: 10px 14px 14px 50px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.lessonAccordionContent {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.7;
+  margin: 0;
 }

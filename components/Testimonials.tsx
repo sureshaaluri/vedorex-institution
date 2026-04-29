@@ -1,8 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const STRAPI_URL = "http://localhost:1337";
+
+/* ================= TYPES ================= */
 
 interface TestimonialCard {
   id: number;
@@ -20,220 +23,270 @@ interface TestimonialsData {
   TestimonialsCard: TestimonialCard[];
 }
 
+/* ================= STYLES ================= */
+
+const styles = `
+.testimonials-wrapper{
+  max-width:1440px;
+  margin:auto;
+  background:#F0EEFF;
+  padding:60px 20px;
+}
+
+.testimonials-header h2{
+  color:#547cd3;
+  font-weight:700;
+  margin-bottom:32px;
+  text-align:center;
+}
+
+/* ---------- Slide ---------- */
+
+.carousel-slide{
+  background:#fff;
+  border-radius:16px;
+  padding:28px;
+  border:1px solid rgba(92,68,216,.2);
+  box-shadow:0 4px 24px rgba(92,68,216,.08);
+}
+
+/* ---------- GRID ---------- */
+
+.carousel-cards-row{
+  display:grid;
+  gap:24px;
+}
+
+/* ✅ Mobile */
+@media (max-width:767px){
+  .carousel-cards-row{
+    grid-template-columns:1fr;
+  }
+}
+
+/* ✅ Tablet 768px */
+@media (min-width:768px) and (max-width:1023px){
+  .carousel-cards-row{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+/* ✅ Desktop */
+@media (min-width:1024px){
+  .carousel-cards-row{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+/* ---------- Card ---------- */
+
+.t-card{
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.t-avatar,
+.t-avatar-placeholder{
+  width:72px;
+  height:72px;
+  border-radius:50%;
+  margin-bottom:12px;
+}
+
+.t-avatar{
+  object-fit:cover;
+  border:3px solid #5C44D8;
+}
+
+.t-avatar-placeholder{
+  background:linear-gradient(135deg,#5C44D8,#a855f7);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:22px;
+}
+
+.t-stars{margin-bottom:12px;}
+.t-star{font-size:20px;}
+
+.t-quote{
+  font-size:14px;
+  color:#374151;
+  font-style:italic;
+  line-height:1.8;
+  margin-bottom:18px;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
+
+.t-name{font-weight:700;margin:0;}
+.t-role{font-size:13px;color:#6b7280;}
+
+/* ---------- Controls ---------- */
+
+.carousel-controls{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:16px;
+  margin-top:28px;
+}
+
+.carousel-btn{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:2px solid #5C44D8;
+  background:#fff;
+  color:#5C44D8;
+  cursor:pointer;
+  font-size:18px;
+}
+
+.carousel-dots{
+  display:flex;
+  gap:8px;
+}
+
+.carousel-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  border:none;
+  background:#5C44D8;
+  opacity:.3;
+  cursor:pointer;
+}
+
+.carousel-dot.active{
+  opacity:1;
+  transform:scale(1.3);
+}
+`;
+
+/* ================= HELPERS ================= */
+
+function chunk<T>(arr: T[], size: number): T[][] {
+  const result: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size));
+  }
+  return result;
+}
+
+/* ================= COMPONENT ================= */
+
 export default function Testimonials({ data }: { data: TestimonialsData }) {
 
+  const [current, setCurrent] = useState(0);
+  const [chunkSize, setChunkSize] = useState(3);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  /* ✅ PERFECT RESPONSIVE */
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const interval = setInterval(() => {
-        if ((window as any).bootstrap) {
-          const el = document.getElementById("testimonialsCarousel");
-          if (el) {
-            const existing = (window as any).bootstrap.Carousel.getInstance(el);
-            if (existing) existing.dispose();
-            new (window as any).bootstrap.Carousel(el, {
-              interval: 5000,
-              ride: "carousel",
-              wrap: true,
-              pause: "hover",
-            });
-          }
-          clearInterval(interval);
-        }
-      }, 100);
-      return () => clearInterval(interval);
-    }
+    const update = () => {
+      const w = window.innerWidth;
+
+      if (w < 768) setChunkSize(1);
+      else setChunkSize(3);
+    };
+
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
 
-  // Group cards into chunks of 3
-  const chunks = [];
-  for (let i = 0; i < data.TestimonialsCard.length; i += 3) {
-    chunks.push(data.TestimonialsCard.slice(i, i + 3));
-  }
+  const chunks = chunk(data.TestimonialsCard, chunkSize);
+
+  const next = () => setCurrent((c) => (c + 1) % chunks.length);
+  const prev = () =>
+    setCurrent((c) => (c - 1 + chunks.length) % chunks.length);
+
+  /* Auto Slide */
+  useEffect(() => {
+    timerRef.current = setInterval(next, 5000);
+    return () => timerRef.current && clearInterval(timerRef.current);
+  }, [chunks.length]);
 
   return (
-    <section>
-      <div
-        className="rounded-4 p-4"
+    <>
+      <style>{styles}</style>
 
-        style={{
-          maxWidth: "1920px",
-          margin: "0 auto",
-          width: "100%",
-          overflow: "hidden",
-          boxSizing: "border-box",
-          backgroundColor: "#d1d5db",
-          padding: "20px clamp(16px, 4vw, 50px)",
-          
-         }}
-      >
-        {/* Title */}
-        <div className="mb-5">
-          <h2 className="fw-bold" style={{ color: "#5C44D8" }}>{data.title}</h2>
+      <div className="testimonials-wrapper">
+        <div className="testimonials-header">
+          <h2>{data.title}</h2>
         </div>
 
-        {/* Carousel */}
-        <div
-          id="testimonialsCarousel"
-          className="carousel slide"
-          data-bs-ride="carousel"
-          data-bs-interval="5000"
-        >
-          {/* Indicators */}
-          {chunks.length > 1 && (
-            <div className="carousel-indicators" style={{ bottom: "-40px" }}>
-              {chunks.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  data-bs-target="#testimonialsCarousel"
-                  data-bs-slide-to={i}
-                  className={i === 0 ? "active" : ""}
-                  style={{
-                    width: 8, height: 8,
-                    borderRadius: "50%",
-                    backgroundColor: "#5C44D8",
-                    border: "none",
-                    opacity: i === 0 ? 1 : 0.3,
-                  }}
-                />
-              ))}
-            </div>
-          )}
+        <div className="carousel-slide">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              className="carousel-cards-row"
+              initial={{ opacity:0, x:60 }}
+              animate={{ opacity:1, x:0 }}
+              exit={{ opacity:0, x:-60 }}
+            >
+              {chunks[current]?.map((card) => (
+                <div key={card.id} className="t-card">
 
-          {/* Slides - 3 cards per slide inside ONE big card */}
-          <div className="carousel-inner pb-5">
-            {chunks.map((chunk, index) => (
-              <div
-                key={index}
-                className={`carousel-item ${index === 0 ? "active" : ""}`}
-              >
-                {/* ✅ Single outer card wrapping all 3 */}
-                <div
-                  className="rounded-4 p-4"
-                  style={{
-                    backgroundColor: "#fff",
-                    border: "1px solid rgba(92,68,216,0.2)",
-                    boxShadow: "0 4px 24px rgba(92,68,216,0.08)",
-                  }}
-                >
-                  <div className="row g-0">
-                    {chunk.map((card, cardIndex) => (
-                      <div
-                        key={card.id}
-                        className="col-lg-4"
+                  {card.avatar?.url ? (
+                    <img
+                      className="t-avatar"
+                      src={`${STRAPI_URL}${card.avatar.url}`}
+                      alt={card.name}
+                    />
+                  ) : (
+                    <div className="t-avatar-placeholder">
+                      {card.name.charAt(0)}
+                    </div>
+                  )}
+
+                  <div className="t-stars">
+                    {Array.from({ length:5 }).map((_,i)=>(
+                      <span
+                        key={i}
+                        className="t-star"
                         style={{
-                          // ✅ Divider between cards
-                          borderRight: cardIndex < chunk.length - 1
-                            ? "1px solid rgba(92,68,216,0.15)"
-                            : "none",
-                          padding: "0 24px",
+                          color:i < card.rating ? "#f59e0b" : "#d1d5db"
                         }}
                       >
-                        <div className="text-center h-100 d-flex flex-column">
-
-                          {/* Avatar */}
-                          <div className="d-flex justify-content-center mb-3">
-                            {card.avatar?.url ? (
-                              <img
-                                src={`${STRAPI_URL}${card.avatar.url}`}
-                                alt={card.avatar.alternativeText || card.name}
-                                width={72}
-                                height={72}
-                                style={{
-                                  borderRadius: "50%",
-                                  objectFit: "cover",
-                                  border: "3px solid #5C44D8",
-                                }}
-                              />
-                            ) : (
-                              <div
-                                style={{
-                                  width: 72, height: 72,
-                                  borderRadius: "50%",
-                                  background: "linear-gradient(135deg, #5C44D8, #a855f7)",
-                                  display: "flex", alignItems: "center",
-                                  justifyContent: "center",
-                                  color: "#fff", fontSize: 24, fontWeight: 700,
-                                }}
-                              >
-                                {card.name.charAt(0)}
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Stars */}
-                          <div className="mb-3">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                              <span
-                                key={i}
-                                style={{
-                                  color: i < card.rating ? "#f59e0b" : "#d1d5db",
-                                  fontSize: 20,
-                                }}
-                              >
-                                ★
-                              </span>
-                            ))}
-                          </div>
-
-                          {/* Quote */}
-                          <p
-                            className="mb-4 flex-grow-1"
-                            style={{
-                              fontSize: 14, lineHeight: 1.8,
-                              color: "#374151", fontStyle: "italic",
-                            }}
-                          >
-                            "{card.quote}"
-                          </p>
-
-                          {/* Name & Role */}
-                          <p className="fw-bold mb-1" style={{ color: "#111827" }}>
-                            {card.name}
-                          </p>
-                          <p className="text-secondary mb-0" style={{ fontSize: 13 }}>
-                            {card.role}
-                          </p>
-                        </div>
-                      </div>
+                        ★
+                      </span>
                     ))}
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
 
-          {/* Prev / Next */}
+                  <p className="t-quote">"{card.quote}"</p>
+                  <p className="t-name">{card.name}</p>
+                  <p className="t-role">{card.role}</p>
+
+                </div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+
           {chunks.length > 1 && (
-            <>
-              <button
-                className="carousel-control-prev"
-                type="button"
-                data-bs-target="#testimonialsCarousel"
-                data-bs-slide="prev"
-                style={{ width: 40, left: "-50px" }}
-              >
-                <span
-                  className="carousel-control-prev-icon"
-                  style={{ filter: "invert(30%) sepia(80%) saturate(500%) hue-rotate(220deg)" }}
-                />
-              </button>
-              <button
-                className="carousel-control-next"
-                type="button"
-                data-bs-target="#testimonialsCarousel"
-                data-bs-slide="next"
-                style={{ width: 40, right: "-50px" }}
-              >
-                <span
-                  className="carousel-control-next-icon"
-                  style={{ filter: "invert(30%) sepia(80%) saturate(500%) hue-rotate(220deg)" }}
-                />
-              </button>
-            </>
+            <div className="carousel-controls">
+              
+
+              <div className="carousel-dots">
+                {chunks.map((_,i)=>(
+                  <button
+                    key={i}
+                    className={`carousel-dot ${i===current?"active":""}`}
+                    onClick={()=>setCurrent(i)}
+                  />
+                ))}
+              </div>
+
+            </div>
           )}
         </div>
       </div>
-    </section>
+    </>
   );
 }
