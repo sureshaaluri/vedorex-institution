@@ -165,14 +165,14 @@ export interface ContactContactForm extends Struct.ComponentSchema {
   };
   attributes: {
     button_text: Schema.Attribute.String;
+    course_placeholder: Schema.Attribute.String;
     emailaddress_placeholder: Schema.Attribute.String;
     Firstname_placeholder: Schema.Attribute.String;
     heading: Schema.Attribute.Text;
     image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     lastname_placeholder: Schema.Attribute.String;
-    subject_placeholder: Schema.Attribute.String;
+    PhoneNumber_placeholder: Schema.Attribute.String;
     tag_label: Schema.Attribute.String;
-    your_message: Schema.Attribute.String;
   };
 }
 
@@ -198,6 +198,7 @@ export interface ContactHeroSection extends Struct.ComponentSchema {
     background_image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
     >;
+    Description: Schema.Attribute.String;
     heading: Schema.Attribute.String;
     overlay_Color: Schema.Attribute.String;
     subheading: Schema.Attribute.String;

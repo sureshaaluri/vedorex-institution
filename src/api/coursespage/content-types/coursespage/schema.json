@@ -67,6 +67,9 @@
     },
     "rating": {
       "type": "decimal"
+    },
+    "owner_email": {
+      "type": "email"
     }
   }
 }

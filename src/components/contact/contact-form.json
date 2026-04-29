@@ -30,10 +30,10 @@
     "emailaddress_placeholder": {
       "type": "string"
     },
-    "subject_placeholder": {
+    "PhoneNumber_placeholder": {
       "type": "string"
     },
-    "your_message": {
+    "course_placeholder": {
       "type": "string"
     },
     "button_text": {

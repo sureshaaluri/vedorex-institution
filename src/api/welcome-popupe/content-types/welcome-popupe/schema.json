@@ -1,0 +1,36 @@
+{
+  "kind": "singleType",
+  "collectionName": "welcome_popupes",
+  "info": {
+    "singularName": "welcome-popupe",
+    "pluralName": "welcome-popupes",
+    "displayName": "Welcome-popupe"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "address": {
+      "type": "text"
+    },
+    "is_active": {
+      "type": "boolean"
+    }
+  }
+}

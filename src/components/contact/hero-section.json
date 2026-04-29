@@ -11,6 +11,9 @@
     "subheading": {
       "type": "string"
     },
+    "Description": {
+      "type": "string"
+    },
     "overlay_Color": {
       "type": "string"
     },
