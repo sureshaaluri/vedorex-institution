@@ -15,8 +15,8 @@ export default factories.createCoreController(
         courses.map((id: number) =>
           strapi.entityService.findOne("api::coursespage.coursespage", id, {
             fields: ["title", "owner_email"],
-          })
-        )
+          }),
+        ),
       );
 
       // 3. Build course list for email
@@ -29,7 +29,13 @@ export default factories.createCoreController(
         ...new Set(courseDetails.map((c: any) => c.owner_email)),
       ];
 
-      // 5. Send via Zeptomail API
+      console.log("ownerEmails:", ownerEmails);
+      console.log("courseDetails:", JSON.stringify(courseDetails));
+      console.log("API Key exists:", !!process.env.ZEPTOMAIL_API_KEY);
+      console.log("From email:", process.env.ZEPTOMAIL_FROM_EMAIL);
+      // console.log("Full auth header:", `Zoho-enczapikey ${process.env.ZEPTOMAIL_API_KEY}`);
+
+
       await Promise.all(
         ownerEmails.map((ownerEmail: any) =>
           fetch("https://api.zeptomail.in/v1.1/email", {
@@ -83,18 +89,19 @@ export default factories.createCoreController(
                 </div>
               `,
             }),
-          }).then((res) => {
+          }).then(async (res) => {
+            const body = await res.json();
             if (!res.ok) {
-              return res.json().then((err) => {
-                console.error("Zeptomail error:", err);
-              });
+              console.error("Zeptomail error:", JSON.stringify(body));
+            } else {
+              console.log("Email sent to:", ownerEmail);
+              console.log("Zeptomail response:", JSON.stringify(body));
             }
-            console.log("Email sent to:", ownerEmail);
-          })
-        )
+          }),
+        ),
       );
 
       return response;
     },
-  })
+  }),
 );
