@@ -26,7 +26,6 @@ async function getFooterData() {
     { cache: "no-store" }
   );
   const json = await res.json();
-  console.log("Footer raw JSON:", json); // ← log before return
   return json.data;
 }
 

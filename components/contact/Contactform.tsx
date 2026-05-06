@@ -40,21 +40,36 @@ export default function ContactForm({ data }: { data: FormData }) {
     courses: [] as number[],
   });
 
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
 
-  // Fetch courses
+  // Fetch courses — flatten Strapi v4 shape { id, attributes: { title } } → { id, title }
   useEffect(() => {
-    const url = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/coursespages?fields[0]=title`;
+    const STRAPI_URL =
+      process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+    const url = `${STRAPI_URL}/api/coursespages?fields[0]=title`;
     fetch(url)
       .then((res) => res.json())
-      .then((json) => setCourses(json.data))
+      .then((json) => {
+        const flattened: Course[] = (json.data ?? []).map(
+          (c: { id: number, title: string }) => ({
+            id: c.id,
+            title: c.title,
+          }),
+        );
+        setCourses(flattened);
+      })
       .catch((err) => console.error("Fetch error:", err));
   }, []);
 
   // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     };
@@ -63,12 +78,13 @@ export default function ContactForm({ data }: { data: FormData }) {
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
 
-  const toggleCourse = (id: number) => {
+  const toggleCourse = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
     setFormValues((prev) => ({
       ...prev,
       courses: prev.courses.includes(id)
@@ -82,26 +98,31 @@ export default function ContactForm({ data }: { data: FormData }) {
     setStatus("loading");
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/enrollments`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            data: {
-              first_name: formValues.firstName,
-              last_name: formValues.lastName,
-              email: formValues.email,
-              phone: formValues.phone,
-              courses: formValues.courses,
-            },
-          }),
-        }
-      );
+      const STRAPI_URL =
+        process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+      const res = await fetch(`${STRAPI_URL}/api/enrollments`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: {
+            first_name: formValues.firstName,
+            last_name: formValues.lastName,
+            email: formValues.email,
+            phone: formValues.phone,
+            courses: formValues.courses,
+          },
+        }),
+      });
 
       if (res.ok) {
         setStatus("success");
-        setFormValues({ firstName: "", lastName: "", email: "", phone: "", courses: [] });
+        setFormValues({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          courses: [],
+        });
         setDropdownOpen(false);
       } else {
         setStatus("error");
@@ -111,16 +132,16 @@ export default function ContactForm({ data }: { data: FormData }) {
     }
   };
 
-  const imageUrl =
-    data.image?.data?.attributes?.url
-      ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${data.image.data.attributes.url}`
-      : "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80";
+  const STRAPI_URL =
+    process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+  const imageUrl = data.image?.data?.attributes?.url
+    ? `${STRAPI_URL}${data.image.data.attributes.url}`
+    : "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80";
 
   return (
     <section className="py-5" style={{ backgroundColor: "#f8f9fa" }}>
       <div className="container">
-        <div className="row align-items-stretch g-5" >
-
+        <div className="row align-items-stretch g-5">
           {/* ===== Left — Image ===== */}
           <div className="col-12 col-lg-5">
             <img
@@ -132,13 +153,22 @@ export default function ContactForm({ data }: { data: FormData }) {
 
           {/* ===== Right — Form ===== */}
           <div className="col-12 col-lg-7">
-
             {/* Tag Label */}
             <div className="d-flex align-items-center gap-2 mb-2">
-              <div style={{ width: "40px", height: "2px", backgroundColor: "#547cd3" }} />
+              <div
+                style={{
+                  width: "40px",
+                  height: "2px",
+                  backgroundColor: "#547cd3",
+                }}
+              />
               <span
                 className="text-uppercase fw-semibold"
-                style={{ color: "#547cd3", fontSize: "13px", letterSpacing: "2px" }}
+                style={{
+                  color: "#547cd3",
+                  fontSize: "13px",
+                  letterSpacing: "2px",
+                }}
               >
                 {data.tag_label}
               </span>
@@ -150,7 +180,10 @@ export default function ContactForm({ data }: { data: FormData }) {
               style={{ fontSize: "clamp(24px, 3vw, 36px)" }}
             >
               {data.heading.split("\n").map((line, i) => (
-                <span key={i}>{line}<br /></span>
+                <span key={i}>
+                  {line}
+                  <br />
+                </span>
               ))}
             </h2>
 
@@ -170,7 +203,6 @@ export default function ContactForm({ data }: { data: FormData }) {
 
             {/* Form */}
             <form onSubmit={handleSubmit}>
-
               {/* First Name & Last Name */}
               <div className="row g-3 mb-3">
                 <div className="col-12 col-sm-6">
@@ -227,11 +259,14 @@ export default function ContactForm({ data }: { data: FormData }) {
               </div>
 
               {/* Course Multi-Select Dropdown */}
-              <div className="mb-4" style={{ position: "relative" }} ref={dropdownRef}>
-
+              <div
+                className="mb-4"
+                style={{ position: "relative" }}
+                ref={dropdownRef}
+              >
                 {/* Trigger */}
                 <div
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  onClick={() => setDropdownOpen((prev) => !prev)}
                   style={{
                     border: "1px solid #dee2e6",
                     borderRadius: dropdownOpen ? "8px 8px 0 0" : "8px",
@@ -251,13 +286,24 @@ export default function ContactForm({ data }: { data: FormData }) {
                       : data.course_placeholder || "-- Select Courses --"}
                   </span>
                   <svg
-                    width="12" height="12" viewBox="0 0 12 12" fill="none"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
                     style={{
-                      transform: dropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
+                      transform: dropdownOpen
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
                       transition: "transform 0.2s",
                     }}
                   >
-                    <path d="M2 4L6 8L10 4" stroke="#6c757d" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path
+                      d="M2 4L6 8L10 4"
+                      stroke="#6c757d"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </div>
 
@@ -274,15 +320,29 @@ export default function ContactForm({ data }: { data: FormData }) {
                       borderRadius: "0 0 8px 8px",
                       backgroundColor: "#fff",
                       zIndex: 999,
+                      maxHeight: "240px",
+                      overflowY: "auto",
                       boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                     }}
                   >
+                    {courses.length === 0 && (
+                      <div
+                        style={{
+                          padding: "12px 16px",
+                          fontSize: "14px",
+                          color: "#6c757d",
+                        }}
+                      >
+                        No courses available.
+                      </div>
+                    )}
                     {courses.map((course) => {
                       const isSelected = formValues.courses.includes(course.id);
                       return (
                         <div
                           key={course.id}
-                          onClick={() => toggleCourse(course.id)}
+                          // FIX: pass event to stopPropagation inside toggleCourse
+                          onClick={(e) => toggleCourse(course.id, e)}
                           style={{
                             padding: "10px 16px",
                             cursor: "pointer",
@@ -296,20 +356,35 @@ export default function ContactForm({ data }: { data: FormData }) {
                           }}
                         >
                           {/* Custom Checkbox */}
-                          <div style={{
-                            width: "16px",
-                            height: "16px",
-                            borderRadius: "4px",
-                            border: isSelected ? "2px solid #5C44D8" : "2px solid #dee2e6",
-                            backgroundColor: isSelected ? "#5C44D8" : "#fff",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexShrink: 0,
-                          }}>
+                          <div
+                            style={{
+                              width: "16px",
+                              height: "16px",
+                              borderRadius: "4px",
+                              border: isSelected
+                                ? "2px solid #5C44D8"
+                                : "2px solid #dee2e6",
+                              backgroundColor: isSelected ? "#5C44D8" : "#fff",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              flexShrink: 0,
+                            }}
+                          >
                             {isSelected && (
-                              <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                                <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                              <svg
+                                width="10"
+                                height="8"
+                                viewBox="0 0 10 8"
+                                fill="none"
+                              >
+                                <path
+                                  d="M1 4L3.5 6.5L9 1"
+                                  stroke="white"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
                               </svg>
                             )}
                           </div>
@@ -337,7 +412,6 @@ export default function ContactForm({ data }: { data: FormData }) {
               >
                 {status === "loading" ? "Sending..." : data.button_text}
               </button>
-
             </form>
           </div>
         </div>

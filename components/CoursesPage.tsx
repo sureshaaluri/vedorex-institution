@@ -185,7 +185,7 @@ function LessonAccordion({
           <p
             style={{
               fontSize: 13,
-              color: "rgba(255,255,255,.55)",
+              color: "rgba(9, 7, 14, 0.55)",
               lineHeight: 1.7,
               margin: 0,
             }}
@@ -241,7 +241,7 @@ function NestedAccordion({ topics }: { topics: Topic[] }) {
                 padding: "13px 16px",
                 background: isOpen ? "rgba(167,139,250,.06)" : "transparent",
                 border: "none",
-                color: "#fff",
+                color: "#1b0808",
                 cursor: "pointer",
                 fontFamily: "inherit",
                 transition: "background .2s",
@@ -274,7 +274,12 @@ function NestedAccordion({ topics }: { topics: Topic[] }) {
                   style={{
                     fontSize: 14,
                     fontWeight: 600,
-                    color: isOpen ? "#a78bfa" : "rgba(255,255,255,.9)",
+                    
+                    
+                    
+                    
+                    
+                    r: isOpen ? "#a78bfa" : "rgba(255,255,255,.9)",
                     transition: "color .2s",
                   }}
                 >
