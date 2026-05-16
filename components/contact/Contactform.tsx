@@ -19,11 +19,8 @@ interface FormData {
   course_placeholder: string;
   button_text: string;
   image?: {
-    data?: {
-      attributes: {
-        url: string;
-      };
-    };
+    url: string;        // ← Strapi v5
+    alternativeText?: string;
   };
 }
 
@@ -132,13 +129,11 @@ export default function ContactForm({ data }: { data: FormData }) {
     }
   };
 
-  const STRAPI_URL =
-    process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
-  const imageUrl = data.image?.data?.attributes?.url
-    ? `${STRAPI_URL}${data.image.data.attributes.url}`
-    : "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80";
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 
-  return (
+const imageUrl = data.image?.url
+  ? `${STRAPI_URL}${data.image.url}`
+  : "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80";  return (
     <section className="py-5" style={{ backgroundColor: "#f8f9fa" }}>
       <div className="container">
         <div className="row align-items-stretch g-5">

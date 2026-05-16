@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import styles from "./CoursesPage.module.css";
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+const STRAPI_URL =
+  process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 
 interface Topic {
   title: string;
@@ -55,7 +56,7 @@ interface Props {
   courses: Course[];
 }
 
-// ── UNIVERSAL BREADCRUMB ──
+// ── BREADCRUMB ──
 function Breadcrumb({ course }: { course: Course | null }) {
   const crumbs = [
     { label: "Home", href: "/" },
@@ -66,10 +67,7 @@ function Breadcrumb({ course }: { course: Course | null }) {
             label: course.category || "Course",
             href: `/courses?category=${(course.category || "").toLowerCase().replace(/\s+/g, "-")}`,
           },
-          {
-            label: course.title,
-            href: `/courses/${course.slug}`,
-          },
+          { label: course.title, href: `/courses/${course.slug}` },
         ]
       : []),
   ];
@@ -80,9 +78,7 @@ function Breadcrumb({ course }: { course: Course | null }) {
         <span key={i} className={styles.breadcrumbItem}>
           {i > 0 && <span className={styles.breadcrumbSep}>›</span>}
           {i === crumbs.length - 1 ? (
-            <span className={styles.breadcrumbActive}>
-              {c.label}
-            </span>
+            <span className={styles.breadcrumbActive}>{c.label}</span>
           ) : (
             <Link href={c.href} className={styles.breadcrumbLink}>
               {c.label}
@@ -94,243 +90,143 @@ function Breadcrumb({ course }: { course: Course | null }) {
   );
 }
 
-// ── INNER ACCORDION (Lesson level) ──
-function LessonAccordion({
-  topic,
-  index,
+// ── SINGLE ACCORDION ──
+// ── SINGLE ACCORDION ──
+function SingleAccordion({
+  topics,
+  courseTitle,
 }: {
-  topic: Topic;
-  index: number;
+  topics: Topic[];
+  courseTitle: string;
 }) {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div
-      style={{
-        background: open ? "rgba(167,139,250,.05)" : "rgba(255,255,255,.02)",
-        border: `1px solid ${open ? "rgba(167,139,250,.25)" : "rgba(255,255,255,.05)"}`,
-        borderRadius: 8,
-        overflow: "hidden",
-        marginBottom: 6,
-        transition: "border-color .2s",
-      }}
-    >
-      {/* Lesson Header */}
-      <button
-        onClick={() => setOpen(!open)}
+    <div style={{ margin: "12px 0 24px" }}>
+      <div
         style={{
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          padding: "10px 14px",
-          background: "transparent",
-          border: "none",
-          color: "#fff",
-          cursor: "pointer",
-          fontFamily: "inherit",
-          textAlign: "left",
+          background: isOpen
+            ? "rgba(167,139,250,.08)"
+            : "rgba(255,255,255,.03)",
+          border: `1px solid ${isOpen ? "rgba(167,139,250,.35)" : "rgba(255,255,255,.08)"}`,
+          borderRadius: 8,
+          overflow: "hidden",
+          transition: "all .2s",
         }}
       >
-        <div
+        {/* Header */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
           style={{
-            width: 26,
-            height: 26,
-            borderRadius: "50%",
-            background: open
-              ? "rgba(167,139,250,.2)"
-              : "rgba(255,255,255,.06)",
-            border: `1px solid ${open ? "rgba(167,139,250,.3)" : "rgba(255,255,255,.1)"}`,
+            width: "100%",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-            fontSize: 9,
-            color: open ? "#a78bfa" : "rgba(255,255,255,.4)",
-            transition: "all .2s",
+            gap: 10,
+            padding: "14px 16px",
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            fontFamily: "inherit",
+            textAlign: "left",
           }}
         >
-          {open ? "▼" : "▶"}
-        </div>
-        <span
-          style={{
-            fontSize: 13,
-            fontWeight: 500,
-            color: open ? "#a78bfa" : "rgba(255,255,255,.8)",
-            flex: 1,
-            transition: "color .2s",
-          }}
-        >
-          {topic.title}
-        </span>
-        <span
-          style={{
-            fontSize: 10,
-            color: "rgba(255,255,255,.2)",
-            whiteSpace: "nowrap",
-          }}
-        >
-          lesson {index + 1}
-        </span>
-      </button>
-
-      {/* Lesson Content */}
-      {open && (
-        <div
-          style={{
-            padding: "10px 14px 14px 50px",
-            borderTop: "1px solid rgba(255,255,255,.05)",
-          }}
-        >
-          <p
+          <span
             style={{
-              fontSize: 13,
-              color: "rgba(9, 7, 14, 0.55)",
-              lineHeight: 1.7,
-              margin: 0,
+              fontSize: 14,
+              fontWeight: 600,
+              color: isOpen ? "#a78bfa" : "#020101",
+              flex: 1,
+              transition: "color .2s",
             }}
           >
-            {topic.content}
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
+            Course Curriculum — {topics.length} topics
+          </span>
+          <span
+            style={{
+              fontSize: 16,
+              color: isOpen ? "#a78bfa" : "rgba(0,0,0,0.4)",
+              transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+              transition: "transform .22s",
+              display: "inline-block",
+            }}
+          >
+            ▾
+          </span>
+        </button>
 
-// ── OUTER ACCORDION (Section level) ──
-const SECTIONS = [
-  { title: "Foundation"},
-  { title: "Core concepts"},
-  { title: "Advanced topics"},
-  { title: "Project work"},
-];
-
-function NestedAccordion({ topics }: { topics: Topic[] }) {
-  const [openSection, setOpenSection] = useState<number | null>(0);
-
-  const perSection = Math.ceil(topics.length / SECTIONS.length);
-  const sections = SECTIONS.map((s, i) => ({
-    ...s,
-    lessons: topics.slice(i * perSection, (i + 1) * perSection),
-  })).filter((s) => s.lessons.length > 0);
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8, margin: "12px 0 24px" }}>
-      {sections.map((section, idx) => {
-        const isOpen = openSection === idx;
-        return (
+        {/* Body */}
+        {isOpen && (
           <div
-            key={idx}
             style={{
-              background: "rgba(255,255,255,.03)",
-              border: `1px solid ${isOpen ? "rgba(167,139,250,.3)" : "rgba(255,255,255,.07)"}`,
-              borderRadius: 10,
-              overflow: "hidden",
-              transition: "border-color .2s",
+              padding: "8px 20px 24px 20px",
+              borderTop: "1px solid rgba(0,0,0,0.08)",
             }}
           >
-            {/* Section Header — Outer Accordion */}
-            <button
-              onClick={() => setOpenSection(isOpen ? null : idx)}
+            {/* Course title */}
+            <h3
               style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "13px 16px",
-                background: isOpen ? "rgba(167,139,250,.06)" : "transparent",
-                border: "none",
-                color: "#1b0808",
-                cursor: "pointer",
-                fontFamily: "inherit",
-                transition: "background .2s",
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#1a1a2e",
+                margin: "16px 0 16px",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                {/* Section number badge */}
-                <div
-                  style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 7,
-                    background: isOpen
-                      ? "rgba(167,139,250,.2)"
-                      : "rgba(255,255,255,.06)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: isOpen ? "#a78bfa" : "rgba(255,255,255,.4)",
-                    transition: "all .2s",
-                    flexShrink: 0,
-                  }}
-                >
-                  {idx + 1}
-                </div>
-                <span style={{ fontSize: 16 }}>{section.icon}</span>
-                <span
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 600,
-                    
-                    
-                    
-                    
-                    
-                    r: isOpen ? "#a78bfa" : "rgba(255,255,255,.9)",
-                    transition: "color .2s",
-                  }}
-                >
-                  {section.title}
-                </span>
-                <span
-                  style={{
-                    fontSize: 11,
-                    color: "rgba(255,255,255,.3)",
-                    background: "rgba(255,255,255,.05)",
-                    padding: "2px 8px",
-                    borderRadius: 50,
-                  }}
-                >
-                  {section.lessons.length} lessons
-                </span>
-              </div>
-              <span
-                style={{
-                  fontSize: 14,
-                  color: isOpen ? "#a78bfa" : "rgba(255,255,255,.3)",
-                  transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-                  transition: "transform .22s",
-                  display: "inline-block",
-                }}
-              >
-                ▾
-              </span>
-            </button>
+              {courseTitle}
+            </h3>
 
-            {/* Section Body — contains inner lesson accordions */}
-            {isOpen && (
-              <div
-                style={{
-                  padding: "12px 14px",
-                  borderTop: "1px solid rgba(255,255,255,.06)",
-                  background: "rgba(0,0,0,.15)",
-                }}
-              >
-                {section.lessons.map((lesson, li) => (
-                  <LessonAccordion
-                    key={li}
-                    topic={lesson}
-                    index={idx * perSection + li}
-                  />
-                ))}
-              </div>
-            )}
+            {/* Each topic = section heading + bullet points from content */}
+            {topics.map((topic, i) => {
+              // Split content into bullet points by ". " or ","
+              const bullets = topic.content
+                ? topic.content
+                    .split(/[.,;]\s*/)
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                : [];
+              return (
+                <div key={i} style={{ marginBottom: 16 }}>
+                  {/* Section heading in blue */}
+                  <p
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "#2563eb",
+                      margin: "0 0 8px",
+                    }}
+                  >
+                    {topic.title}
+                  </p>
+
+                  {/* Bullet points from content */}
+                  <ul
+                    style={{
+                      listStyle: "disc",
+                      paddingLeft: 22,
+                      margin: 0,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 6,
+                    }}
+                  >
+                    {bullets.map((point, j) => (
+                      <li
+                        key={j}
+                        style={{
+                          fontSize: 13,
+                          color: "#1a1a2e",
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
           </div>
-        );
-      })}
+        )}
+      </div>
     </div>
   );
 }
@@ -341,7 +237,7 @@ export default function CoursesPage({ hero, courses }: Props) {
 
   return (
     <div>
-      {/* HERO SECTION */}
+      {/* HERO */}
       <section
         className={styles.hero}
         style={{
@@ -399,7 +295,6 @@ export default function CoursesPage({ hero, courses }: Props) {
 
       {/* COURSES SECTION */}
       <section className={styles.coursesSection}>
-
         {/* LEFT — course list */}
         <div className={styles.sidebar}>
           {courses?.map((course) => (
@@ -439,17 +334,15 @@ export default function CoursesPage({ hero, courses }: Props) {
               <span>📊 {selected.level}</span>
               <span>⏱ {selected.duration}</span>
               <span>👥 {selected.students} students</span>
-              <span>{selected.price === 0 ? "🆓 Free" : `💰 ₹${selected.price}`}</span>
+              <span>
+                {selected.price === 0 ? "🆓 Free" : `💰 ₹${selected.price}`}
+              </span>
               <span>⭐ {selected.rating}</span>
             </div>
 
-            {/* NESTED ACCORDION */}
             {selected.topics?.length > 0 && (
               <>
-                <h4 className={styles.curriculumTitle}>
-                  Course curriculum — {selected.topics.length} lessons
-                </h4>
-                <NestedAccordion topics={selected.topics} />
+                <SingleAccordion topics={selected.topics} courseTitle={selected.title} />
               </>
             )}
 

@@ -127,7 +127,7 @@ export default function WelcomePopup({ data }: { data: any }) {
         </div>
 
         {/* Contact */}
-        <div style={{ padding: "1.25rem 2rem" }}>
+        {/* <div style={{ padding: "1.25rem 2rem" }}>
           <p
             style={{
               textAlign: "center",
@@ -139,9 +139,9 @@ export default function WelcomePopup({ data }: { data: any }) {
             }}
           >
             Get in touch
-          </p>
+          </p> */}
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
+          {/* <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 8 }}>
             <div style={{ background: "#f9fafb", borderRadius: 6, padding: "0.75rem" }}>
               <span style={{ display: "block", fontSize: "0.62rem", color: "#9ca3af", textTransform: "uppercase", marginBottom: 4 }}>Phone</span>
               <span style={{ fontWeight: 600, color: "#1f2937", fontSize: "0.85rem" }}>{data.phone}</span>
@@ -155,7 +155,7 @@ export default function WelcomePopup({ data }: { data: any }) {
           <div style={{ background: "#f9fafb", borderRadius: 6, padding: "0.75rem", marginBottom: "1rem" }}>
             <span style={{ display: "block", fontSize: "0.62rem", color: "#9ca3af", textTransform: "uppercase", marginBottom: 4 }}>Address</span>
             <span style={{ fontWeight: 600, color: "#1f2937", fontSize: "0.85rem" }}>{data.address}</span>
-          </div>
+          </div> */}
 
           <button
             onClick={close}
@@ -178,6 +178,6 @@ export default function WelcomePopup({ data }: { data: any }) {
           </button>
         </div>
       </div>
-    </div>
+    // </div>
   );
 }
