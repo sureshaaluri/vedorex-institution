@@ -44,6 +44,7 @@ export default async function Home() {
         if (section.__component === "section.top-courses") {
           return <TopCourses key={`${section.__component}-${section.id}`} data={section} />;
         }
+      
 
         return null;
       })}
