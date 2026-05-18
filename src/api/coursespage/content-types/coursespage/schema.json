@@ -70,6 +70,22 @@
     },
     "owner_email": {
       "type": "email"
+    },
+    "metatitle": {
+      "type": "string"
+    },
+    "SEOdescription": {
+      "type": "text"
+    },
+    "ogImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   }
 }

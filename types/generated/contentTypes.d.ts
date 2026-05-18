@@ -571,10 +571,13 @@ export interface ApiCoursespageCoursespage extends Struct.CollectionTypeSchema {
       'api::coursespage.coursespage'
     > &
       Schema.Attribute.Private;
+    metatitle: Schema.Attribute.String;
+    ogImage: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     owner_email: Schema.Attribute.Email;
     price: Schema.Attribute.Decimal;
     publishedAt: Schema.Attribute.DateTime;
     rating: Schema.Attribute.Decimal;
+    SEOdescription: Schema.Attribute.Text;
     slug: Schema.Attribute.UID;
     students: Schema.Attribute.Decimal;
     thumbnail: Schema.Attribute.Media<
