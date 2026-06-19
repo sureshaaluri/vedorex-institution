@@ -3,9 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import styles from "./CoursesPage.module.css";
-
-const STRAPI_URL =
-  process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+import { STRAPI_URL } from "@/lib/constants";
 
 interface Topic {
   title: string;

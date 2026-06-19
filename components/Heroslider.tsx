@@ -4,8 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import styles from "./Heroslider.module.css";
 import { motion } from "framer-motion";
-
-const STRAPI_URL = "http://localhost:1337";
+import { STRAPI_URL } from "@/lib/constants";
 
 interface Stat {
   id: number;

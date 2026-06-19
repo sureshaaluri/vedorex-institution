@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { STRAPI_URL } from "@/lib/constants";
 
 interface NavLink {
   id: number;
@@ -27,7 +28,7 @@ interface NavbarData {
 export default function Navbar({ data }: { data: NavbarData }) {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const STRAPI_URL = "http://localhost:1337";
+
 
   const navbarTogglerRef = useRef<HTMLButtonElement>(null);
   const navbarCollapseRef = useRef<HTMLDivElement>(null);

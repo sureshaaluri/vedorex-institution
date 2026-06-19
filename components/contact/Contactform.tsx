@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import styles from "./Contactform.module.css";
+import { STRAPI_URL } from "@/lib/constants";
 
 interface Course {
   id: number;
@@ -43,8 +44,7 @@ export default function ContactForm({ data }: { data: FormData }) {
 
   // Fetch courses — flatten Strapi v4 shape { id, attributes: { title } } → { id, title }
   useEffect(() => {
-    const STRAPI_URL =
-      process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+
     const url = `${STRAPI_URL}/api/coursespages?fields[0]=title`;
     fetch(url)
       .then((res) => res.json())
@@ -95,8 +95,7 @@ export default function ContactForm({ data }: { data: FormData }) {
     setStatus("loading");
 
     try {
-      const STRAPI_URL =
-        process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+
       const res = await fetch(`${STRAPI_URL}/api/enrollments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -129,7 +128,6 @@ export default function ContactForm({ data }: { data: FormData }) {
     }
   };
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 
 const imageUrl = data.image?.url
   ? `${STRAPI_URL}${data.image.url}`

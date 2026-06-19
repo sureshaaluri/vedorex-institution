@@ -7,9 +7,11 @@ import WhyChooseUs from "@/components/WhyChooseUs";
 import TopCourses from "@/components/TopCourses";
 
 
+import { API_ENDPOINTS, APP_CONFIG } from "@/lib/constants";
+
 async function getHomeData() {
-  const res = await fetch("http://localhost:1337/api/home-page", {
-    cache: "no-store",
+  const res = await fetch(API_ENDPOINTS.HOME_PAGE, {
+    cache: APP_CONFIG.apiCacheMode as any,
   });
   const json = await res.json();
   return json.data.sections;

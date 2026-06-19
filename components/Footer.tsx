@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { STRAPI_URL } from "@/lib/constants";
 import "./Footer.css";
 
 /* ================= TYPES ================= */
@@ -30,7 +31,7 @@ interface FooterData {
   link_group: LinkGroup[];
 }
 
-const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+const API_URL = STRAPI_URL;
 
 /* ── Social Icons ── */
 const socialLinks = [

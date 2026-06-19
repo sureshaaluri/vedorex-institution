@@ -2,7 +2,7 @@
 
 import styles from "./CourseHighlight.module.css";
 import { motion } from "framer-motion";
-const STRAPI_URL = "http://localhost:1337";
+import { STRAPI_URL } from "@/lib/constants";
 
 interface Feature {
   id: number;

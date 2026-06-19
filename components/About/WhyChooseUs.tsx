@@ -1,6 +1,5 @@
 import styles from "./WhyChooseUs.module.css";
-
-const BASE_URL = "http://localhost:1337";
+import { STRAPI_URL } from "@/lib/constants";
 
 export default function WhyChooseUs({ data }: any) {
   return (
@@ -18,7 +17,7 @@ export default function WhyChooseUs({ data }: any) {
             <div className={styles.icon}>
               {card.icon?.url && (
                 <img
-                  src={`${BASE_URL}${card.icon.url}`}
+                  src={`${STRAPI_URL}${card.icon.url}`}
                   alt={card.title}
                   width={26}
                   height={26}

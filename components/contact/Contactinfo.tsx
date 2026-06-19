@@ -1,5 +1,5 @@
 "use client";
-
+import { STRAPI_URL } from "@/lib/constants";
 interface Card {
   id: number;
   tag_label: string;
@@ -16,7 +16,6 @@ interface ContactInfoData {
   cards: Card[];
 }
 
-const STRAPI_URL = "http://localhost:1337";
 
 // ✅ icon fallback emojis
 const iconFallback: Record<string, string> = {

@@ -4,8 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import styles from "./CourseCategories.module.css";
-
-const STRAPI_URL = "http://localhost:1337";
+import { STRAPI_URL } from "@/lib/constants";
 
 interface Icon {
   url: string;

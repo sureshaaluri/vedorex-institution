@@ -1,6 +1,5 @@
 import styles from "./Edtech.module.css";
-
-const BASE_URL = "http://localhost:1337";
+import { STRAPI_URL } from "@/lib/constants";
 
 const icons = [
   "https://img.icons8.com/ios-filled/50/1e40af/machine-learning.png",
@@ -20,7 +19,7 @@ export default function Edtech({ data }: any) {
             <div className={styles.badgeText}>Students Trained</div>
           </div>
           <img
-            src={`${BASE_URL}${data.section_image?.url}`}
+            src={`${STRAPI_URL}${data.section_image?.url}`}
             alt={data.section_image?.alternativeText || "about"}
             className={styles.mainImage}
           />

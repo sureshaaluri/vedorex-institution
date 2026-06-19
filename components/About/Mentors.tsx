@@ -1,6 +1,5 @@
 import styles from "./Mentors.module.css";
-
-const STRAPI_URL = "http://localhost:1337";
+import { STRAPI_URL } from "@/lib/constants";
 
 export default function Mentors({ data }: { data: MentorData }) {
   return (

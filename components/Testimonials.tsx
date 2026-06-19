@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const STRAPI_URL = "http://localhost:1337";
+import { STRAPI_URL } from "@/lib/constants";
 
 /* ================= TYPES ================= */
 

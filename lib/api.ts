@@ -1,8 +1,9 @@
 // lib/api.ts
+import { API_ENDPOINTS, APP_CONFIG } from "./constants";
 
 export async function getAboutData() {
   const res = await fetch(
-    "http://localhost:1337/api/about-page?" +
+    API_ENDPOINTS.ABOUT_PAGE + "?" +
     "populate[sections][on][about.why-choose-us][populate][cards][populate]=icon&" +
     "populate[sections][on][about.hero-section][populate]=*&" +
     "populate[sections][on][about.edtech-section][populate]=*&" +
@@ -10,7 +11,7 @@ export async function getAboutData() {
     "populate[sections][on][about.mentors-section][populate][mentors][populate]=image&" +
     "populate[sections][on][about.mentors-section][populate][main_image][populate]=*",
     {
-      cache: "no-store",
+      cache: APP_CONFIG.apiCacheMode as any,
     }
   );
 
@@ -23,10 +24,10 @@ export async function getAboutData() {
 }
  export async function getContactData() {
   const res = await fetch(
-    "http://localhost:1337/api/contact-page?populate[sections][populate]=*",
+    `${API_ENDPOINTS.CONTACT_PAGE}?populate[sections][populate]=*`,
     
     {
-      cache: "no-store",
+      cache: APP_CONFIG.apiCacheMode as any,
     }
   );
 

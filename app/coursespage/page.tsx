@@ -1,16 +1,15 @@
 import CoursesPage from "@/components/CoursesPage";
-
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+import { API_ENDPOINTS } from "@/lib/constants";
 
 export const revalidate = 60;
 
 export default async function CoursesPageRoute() {
   const [pageRes, coursesRes] = await Promise.all([
-    fetch(`${STRAPI_URL}/api/courses-page`, {
+    fetch(`${API_ENDPOINTS.COURSES}?populate=*`, {
       next: { revalidate: 60 },
     }).then((r) => r.json()),
 
-    fetch(`${STRAPI_URL}/api/coursespages?populate=*`, {
+    fetch(`${API_ENDPOINTS.COURSES}?populate=*`, {
       next: { revalidate: 60 },
     }).then((r) => r.json()),
   ]);

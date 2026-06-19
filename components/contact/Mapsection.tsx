@@ -1,4 +1,6 @@
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+\"use client\";
+
+import { STRAPI_URL } from "@/lib/constants";
 
 interface MapData {
   id: number;

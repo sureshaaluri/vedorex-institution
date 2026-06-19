@@ -1,8 +1,10 @@
+import { API_ENDPOINTS, APP_CONFIG } from "./constants";
+
 export async function getPopupData() {
   try {
     const res = await fetch(
-      `http://localhost:1337/api/welcome-popupe`, // hardcoded to test
-      { cache: "no-store" } // disable cache for testing
+      API_ENDPOINTS.WELCOME_POPUP,
+      { cache: APP_CONFIG.apiCacheMode as any }
     );
     console.log("res status:", res.status);
     if (!res.ok) return null;

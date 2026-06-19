@@ -1,7 +1,7 @@
 import styles from "./Hero.module.css";
+import { STRAPI_URL } from "@/lib/constants";
 
 export default function Hero({ data }: any) {
-  const STRAPI_URL = "http://localhost:1337";
   const imageUrl = data.background_Image?.url;
 
   return (

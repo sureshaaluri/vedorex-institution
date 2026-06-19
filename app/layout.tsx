@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Nunito } from "next/font/google";
 import WelcomePopup from "@/components/WelcomePopup";
 import { getPopupData } from "@/lib/getPopupData";
+import { API_ENDPOINTS, APP_CONFIG } from "@/lib/constants";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -13,8 +14,8 @@ const nunito = Nunito({
 });
 
 async function getNavbarData() {
-  const res = await fetch("http://localhost:1337/api/navbar?populate=*", {
-    cache: "no-store",
+  const res = await fetch(`${API_ENDPOINTS.NAVBAR}?populate=*`, {
+    cache: APP_CONFIG.apiCacheMode as any,
   });
   const json = await res.json();
   return json.data;
@@ -22,8 +23,8 @@ async function getNavbarData() {
 
 async function getFooterData() {
   const res = await fetch(
-    "http://localhost:1337/api/footer?populate=logo&populate[link_group][populate][link_groups]=*&populate[ContactInfo]=*",
-    { cache: "no-store" }
+    `${API_ENDPOINTS.FOOTER}?populate=logo&populate[link_group][populate][link_groups]=*&populate[ContactInfo]=*`,
+    { cache: APP_CONFIG.apiCacheMode as any }
   );
   const json = await res.json();
   return json.data;

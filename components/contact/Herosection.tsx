@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from "framer-motion";
-
+import { STRAPI_URL } from "@/lib/constants";
 interface HeroData {
   id: number;
   heading: string;
@@ -15,7 +15,6 @@ interface HeroData {
   useCircleBackground?: boolean;
 }
 
-const STRAPI_URL = "http://localhost:1337";
 
 export default function HeroSection({ data }: { data: HeroData }) {
   const useCircles = data.useCircleBackground ?? true;
