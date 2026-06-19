@@ -5,7 +5,7 @@ export const revalidate = 60;
 
 export default async function CoursesPageRoute() {
   const [pageRes, coursesRes] = await Promise.all([
-    fetch(`${API_ENDPOINTS.COURSES}?populate=*`, {
+    fetch(`${API_ENDPOINTS.COURSES_PAGE}?populate=*`, {
       next: { revalidate: 60 },
     }).then((r) => r.json()),
 

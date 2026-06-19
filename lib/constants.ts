@@ -28,6 +28,7 @@ export const API_ENDPOINTS = {
   NAVBAR: `${STRAPI_URL}/api/navbar`,
   FOOTER: `${STRAPI_URL}/api/footer`,
   COURSES: `${STRAPI_URL}/api/coursespages`,
+  COURSES_PAGE: `${STRAPI_URL}/api/courses-page`,
   WELCOME_POPUP: `${STRAPI_URL}/api/welcome-popupe`,
   ENROLLMENTS: `${STRAPI_URL}/api/enrollments`,
   // Add more endpoints as needed
