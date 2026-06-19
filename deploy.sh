@@ -118,4 +118,4 @@ echo -e "${YELLOW}Admin Panel: http://${SERVER_IP}:1337/admin${NC}"
 echo -e "${YELLOW}API: http://${SERVER_IP}:1337/api${NC}"
 
 
-# cd /home/suresh/NextJS-Scrapi/vedorexAcademy/server && ./deploy.sh 107.172.55.253 adminuser /home/adminuser/apps/server
+# cd /home/suresh/NextJS-Strapi/vedorexAcademy/server && ./deploy.sh 107.172.55.253 adminuser /home/adminuser/apps/server
