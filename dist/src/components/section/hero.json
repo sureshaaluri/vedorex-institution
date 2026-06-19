@@ -1,0 +1,46 @@
+{
+    "collectionName": "components_section_heroes",
+    "info": {
+        "displayName": "slider"
+    },
+    "options": {},
+    "attributes": {
+        "title": {
+            "type": "string"
+        },
+        "highlighted_text": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "primary_btn_label": {
+            "type": "string"
+        },
+        "primary_btn_url": {
+            "type": "string"
+        },
+        "secondary_btn_label": {
+            "type": "string"
+        },
+        "secondary_btn_url": {
+            "type": "string"
+        },
+        "image": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        },
+        "stats": {
+            "type": "component",
+            "component": "section.stats",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

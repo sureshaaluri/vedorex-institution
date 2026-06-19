@@ -1,0 +1,32 @@
+{
+    "collectionName": "components_section_testimonials_cards",
+    "info": {
+        "displayName": "testimonials-card"
+    },
+    "options": {},
+    "attributes": {
+        "name": {
+            "type": "string"
+        },
+        "role": {
+            "type": "string"
+        },
+        "quote": {
+            "type": "string"
+        },
+        "rating": {
+            "type": "integer"
+        },
+        "avatar": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        }
+    },
+    "config": {}
+}

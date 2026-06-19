@@ -1,0 +1,25 @@
+{
+    "collectionName": "components_nav_link_nav_texts",
+    "info": {
+        "displayName": "nav-text"
+    },
+    "options": {},
+    "attributes": {
+        "label": {
+            "type": "string",
+            "required": true
+        },
+        "url": {
+            "type": "string",
+            "required": true
+        },
+        "isExternal": {
+            "type": "boolean",
+            "default": false
+        },
+        "isButton": {
+            "type": "boolean",
+            "default": false
+        }
+    }
+}

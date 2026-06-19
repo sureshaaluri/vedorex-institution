@@ -1,0 +1,15 @@
+{
+    "name": "strapi-plugin-courses-showcase",
+    "version": "1.0.0",
+    "description": "A Strapi plugin to showcase all courses on a single public page with search",
+    "strapi": {
+        "name": "courses-showcase",
+        "displayName": "Courses Showcase",
+        "description": "Display all courses on a single visitor-facing page with live search",
+        "kind": "plugin"
+    },
+    "dependencies": {},
+    "peerDependencies": {
+        "@strapi/strapi": "^4.0.0"
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "collectionName": "components_section_why_choose_uses",
+    "info": {
+        "displayName": "why-choose-us"
+    },
+    "options": {},
+    "attributes": {
+        "title": {
+            "type": "string"
+        },
+        "subtitle": {
+            "type": "string"
+        },
+        "featurecard": {
+            "type": "component",
+            "component": "section.feature-card",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

@@ -230,7 +230,6 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsData }) {
                   <div className="wcu-footer">
                     <span className="wcu-duration">{card.duration}</span>
                     <Link href={card.link_url} className="wcu-link">
-                      {card.link_label} <span>→</span>
                     </Link>
                   </div>
                 </div>

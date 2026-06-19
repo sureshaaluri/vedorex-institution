@@ -27,7 +27,6 @@ export default function WhyChooseUs({ data }: any) {
             <h5 className={styles.cardTitle}>{card.title}</h5>
             <p className={styles.cardDesc}>{card.description}</p>
             <a href={card.link_url?.trim()} className={styles.cardLink}>
-              {card.link_text} →
             </a>
           </div>
         ))}

@@ -1,0 +1,26 @@
+{
+    "collectionName": "components_about_stats_sections",
+    "info": {
+        "displayName": "Stats Section"
+    },
+    "options": {},
+    "attributes": {
+        "tag_label": {
+            "type": "string"
+        },
+        "heading": {
+            "type": "text"
+        },
+        "stats": {
+            "type": "component",
+            "component": "about.stat-item",
+            "repeatable": true
+        },
+        "items": {
+            "type": "component",
+            "component": "about.stats-item",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

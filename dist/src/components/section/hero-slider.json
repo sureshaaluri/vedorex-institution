@@ -1,0 +1,15 @@
+{
+    "collectionName": "components_section_hero_sliders",
+    "info": {
+        "displayName": "banner"
+    },
+    "options": {},
+    "attributes": {
+        "slider": {
+            "type": "component",
+            "component": "section.hero",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

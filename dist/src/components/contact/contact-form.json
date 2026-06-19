@@ -1,0 +1,44 @@
+{
+    "collectionName": "components_contact_contact_forms",
+    "info": {
+        "displayName": "ContactForm"
+    },
+    "options": {},
+    "attributes": {
+        "tag_label": {
+            "type": "string"
+        },
+        "heading": {
+            "type": "text"
+        },
+        "image": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        },
+        "Firstname_placeholder": {
+            "type": "string"
+        },
+        "lastname_placeholder": {
+            "type": "string"
+        },
+        "emailaddress_placeholder": {
+            "type": "string"
+        },
+        "PhoneNumber_placeholder": {
+            "type": "string"
+        },
+        "course_placeholder": {
+            "type": "string"
+        },
+        "button_text": {
+            "type": "string"
+        }
+    },
+    "config": {}
+}

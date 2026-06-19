@@ -1,0 +1,16 @@
+{
+    "collectionName": "components_courses_new_path_steps",
+    "info": {
+        "displayName": " new _PathStep"
+    },
+    "options": {},
+    "attributes": {
+        "title": {
+            "type": "string"
+        },
+        "is_active": {
+            "type": "boolean"
+        }
+    },
+    "config": {}
+}

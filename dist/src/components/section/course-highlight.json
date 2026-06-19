@@ -1,0 +1,34 @@
+{
+    "collectionName": "components_section_course_highlights",
+    "info": {
+        "displayName": "course-highlight"
+    },
+    "options": {},
+    "attributes": {
+        "tag": {
+            "type": "string"
+        },
+        "title": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "image": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        },
+        "feature": {
+            "type": "component",
+            "component": "section.feature",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

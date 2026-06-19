@@ -1,0 +1,35 @@
+{
+    "collectionName": "components_section_feature_cards",
+    "info": {
+        "displayName": "feature-card"
+    },
+    "options": {},
+    "attributes": {
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "duration": {
+            "type": "string"
+        },
+        "link_label": {
+            "type": "string"
+        },
+        "link_url": {
+            "type": "string"
+        },
+        "icon": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        }
+    },
+    "config": {}
+}

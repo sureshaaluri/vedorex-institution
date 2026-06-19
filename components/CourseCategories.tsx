@@ -138,8 +138,7 @@ function CardContent({ card }: { card: CategoryCard }) {
       </p>
 
       {/* Stat link */}
-      <Link
-        href={card.stat_url}
+      <div
         className="d-flex align-items-center justify-content-between rounded-3 px-3 py-2 text-decoration-none"
         style={{
           backgroundColor: "#d1d5db",
@@ -150,7 +149,7 @@ function CardContent({ card }: { card: CategoryCard }) {
       >
         <span>{card.stat_lable_price}</span>
         <span style={{ color: "#5C44D8", fontWeight: 600 }}>›</span>
-      </Link>
+      </div>
     </div>
   );
 }

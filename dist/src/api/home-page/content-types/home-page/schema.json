@@ -1,0 +1,27 @@
+{
+    "kind": "singleType",
+    "collectionName": "home_pages",
+    "info": {
+        "singularName": "home-page",
+        "pluralName": "home-pages",
+        "displayName": "Home page"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "sections": {
+            "type": "dynamiczone",
+            "components": [
+                "section.hero-slider",
+                "section.course-highlight",
+                "section.cta",
+                "section.course-categories",
+                "section.testimonials",
+                "section.why-choose-us",
+                "section.top-courses"
+            ]
+        }
+    }
+}

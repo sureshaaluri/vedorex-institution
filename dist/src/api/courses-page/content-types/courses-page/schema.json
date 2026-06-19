@@ -1,0 +1,54 @@
+{
+    "kind": "singleType",
+    "collectionName": "courses_pages",
+    "info": {
+        "singularName": "courses-page",
+        "pluralName": "courses-pages",
+        "displayName": "Courses Page"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "Hero_Heading": {
+            "type": "string"
+        },
+        "hero_Subheading": {
+            "type": "string"
+        },
+        "statStudent": {
+            "type": "string"
+        },
+        "staprojects": {
+            "type": "string"
+        },
+        "heroimage": {
+            "type": "media",
+            "multiple": true,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        },
+        "staCourses": {
+            "type": "biginteger"
+        },
+        "statrating": {
+            "type": "decimal"
+        },
+        "herodescription": {
+            "type": "string"
+        },
+        "heroctalable": {
+            "type": "string"
+        },
+        "larningpath": {
+            "type": "component",
+            "component": "section.learningpath",
+            "repeatable": true
+        }
+    }
+}

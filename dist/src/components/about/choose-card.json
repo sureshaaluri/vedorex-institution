@@ -1,0 +1,32 @@
+{
+    "collectionName": "components_about_choose_cards",
+    "info": {
+        "displayName": "Choose_Card"
+    },
+    "options": {},
+    "attributes": {
+        "icon": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        },
+        "title": {
+            "type": "string"
+        },
+        "description": {
+            "type": "text"
+        },
+        "link_text": {
+            "type": "string"
+        },
+        "link_url": {
+            "type": "string"
+        }
+    },
+    "config": {}
+}

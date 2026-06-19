@@ -1,0 +1,29 @@
+{
+    "collectionName": "components_about_stat_items",
+    "info": {
+        "displayName": "Stat Item"
+    },
+    "options": {},
+    "attributes": {
+        "icon": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        },
+        "number": {
+            "type": "string"
+        },
+        "label": {
+            "type": "string"
+        },
+        "description": {
+            "type": "text"
+        }
+    },
+    "config": {}
+}

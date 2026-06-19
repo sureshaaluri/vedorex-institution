@@ -1,0 +1,43 @@
+{
+    "collectionName": "components_courses_course_cards",
+    "info": {
+        "displayName": "Course_Card"
+    },
+    "options": {},
+    "attributes": {
+        "badge_text": {
+            "type": "string"
+        },
+        "badgecolor": {
+            "type": "string"
+        },
+        "category": {
+            "type": "string"
+        },
+        "rating": {
+            "type": "string"
+        },
+        "students": {
+            "type": "string"
+        },
+        "title": {
+            "type": "string"
+        },
+        "description": {
+            "type": "text"
+        },
+        "sessions": {
+            "type": "string"
+        },
+        "topics": {
+            "type": "text"
+        },
+        "buttontext": {
+            "type": "string"
+        },
+        "is_featured": {
+            "type": "boolean"
+        }
+    },
+    "config": {}
+}
