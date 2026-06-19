@@ -1,4 +1,4 @@
-\"use client\";
+"use client";
 
 import { STRAPI_URL } from "@/lib/constants";
 

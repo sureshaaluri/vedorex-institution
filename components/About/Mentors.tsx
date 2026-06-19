@@ -1,6 +1,19 @@
 import styles from "./Mentors.module.css";
 import { STRAPI_URL } from "@/lib/constants";
 
+interface MentorData {
+  heading: string;
+  description: string;
+  button_text: string;
+  button_url: string;
+  mentors?: {
+    id: number;
+    name: string;
+    image?: { url: string; alternativeText?: string | null } | null;
+  }[];
+  main_image?: { url: string; alternativeText?: string | null } | null;
+}
+
 export default function Mentors({ data }: { data: MentorData }) {
   return (
     <section className={`py-5 ${styles.mentorsSection}`}>

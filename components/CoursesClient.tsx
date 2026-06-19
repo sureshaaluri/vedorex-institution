@@ -1,4 +1,5 @@
 import { STRAPI_URL } from "@/lib/constants";
+import CoursesPage from "@/components/CoursesPage";
 
 export const revalidate = 60;
 

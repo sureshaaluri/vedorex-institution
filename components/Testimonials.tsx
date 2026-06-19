@@ -209,7 +209,7 @@ export default function Testimonials({ data }: { data: TestimonialsData }) {
   /* Auto Slide */
   useEffect(() => {
     timerRef.current = setInterval(next, 5000);
-    return () => timerRef.current && clearInterval(timerRef.current);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [chunks.length]);
 
   return (
