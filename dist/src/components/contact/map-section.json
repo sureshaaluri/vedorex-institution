@@ -1,0 +1,26 @@
+{
+    "collectionName": "components_contact_map_sections",
+    "info": {
+        "displayName": "Map_Section"
+    },
+    "options": {},
+    "attributes": {
+        "heading": {
+            "type": "string"
+        },
+        "map_url": {
+            "type": "text"
+        },
+        "background_image": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        }
+    },
+    "config": {}
+}

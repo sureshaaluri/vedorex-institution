@@ -1,0 +1,13 @@
+{
+    "collectionName": "components_path_routemaps",
+    "info": {
+        "displayName": "routemap"
+    },
+    "options": {},
+    "attributes": {
+        "title": {
+            "type": "string"
+        }
+    },
+    "config": {}
+}

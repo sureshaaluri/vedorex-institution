@@ -1,0 +1,21 @@
+{
+    "collectionName": "components_section_top_courses",
+    "info": {
+        "displayName": "top-courses"
+    },
+    "options": {},
+    "attributes": {
+        "title": {
+            "type": "string"
+        },
+        "subtitle": {
+            "type": "string"
+        },
+        "coursecard": {
+            "type": "component",
+            "component": "section.course-card",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

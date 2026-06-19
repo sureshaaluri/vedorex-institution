@@ -1,0 +1,34 @@
+{
+    "collectionName": "components_about_edtech_sections",
+    "info": {
+        "displayName": "Edtech Section"
+    },
+    "options": {},
+    "attributes": {
+        "tag_label": {
+            "type": "string"
+        },
+        "heading": {
+            "type": "text"
+        },
+        "description": {
+            "type": "text"
+        },
+        "section_image": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        },
+        "features": {
+            "type": "component",
+            "component": "about.feature-item",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

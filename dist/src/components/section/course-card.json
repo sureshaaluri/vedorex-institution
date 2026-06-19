@@ -1,0 +1,46 @@
+{
+    "collectionName": "components_section_course_cards",
+    "info": {
+        "displayName": "course-card"
+    },
+    "options": {},
+    "attributes": {
+        "name": {
+            "type": "string"
+        },
+        "thumbnail": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        },
+        "lessons": {
+            "type": "integer"
+        },
+        "students": {
+            "type": "integer"
+        },
+        "level": {
+            "type": "enumeration",
+            "enum": [
+                "Beginner",
+                "Intermediate",
+                "Advanced"
+            ]
+        },
+        "rating": {
+            "type": "integer"
+        },
+        "course_btn": {
+            "type": "string"
+        },
+        "courese_url": {
+            "type": "string"
+        }
+    },
+    "config": {}
+}

@@ -1,0 +1,21 @@
+{
+    "collectionName": "components_about_why_chooseuses",
+    "info": {
+        "displayName": "Why_ChooseUs"
+    },
+    "options": {},
+    "attributes": {
+        "heading": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "cards": {
+            "type": "component",
+            "component": "about.choose-card",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

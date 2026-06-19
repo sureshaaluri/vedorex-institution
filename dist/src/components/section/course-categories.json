@@ -1,0 +1,21 @@
+{
+    "collectionName": "components_section_course_categories",
+    "info": {
+        "displayName": "course-categories"
+    },
+    "options": {},
+    "attributes": {
+        "title": {
+            "type": "string"
+        },
+        "subtitle": {
+            "type": "string"
+        },
+        "CategoryCard": {
+            "type": "component",
+            "component": "section.category-card",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

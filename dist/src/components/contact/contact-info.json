@@ -1,0 +1,24 @@
+{
+    "collectionName": "components_contact_contact_infos",
+    "info": {
+        "displayName": "ContactInfo"
+    },
+    "options": {},
+    "attributes": {
+        "heading": {
+            "type": "string"
+        },
+        "subheading": {
+            "type": "string"
+        },
+        "description": {
+            "type": "text"
+        },
+        "cards": {
+            "type": "component",
+            "component": "contact.contact-card",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

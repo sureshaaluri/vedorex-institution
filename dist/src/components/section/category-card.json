@@ -1,0 +1,32 @@
+{
+    "collectionName": "components_section_category_cards",
+    "info": {
+        "displayName": "category-card"
+    },
+    "options": {},
+    "attributes": {
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        },
+        "icon": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        },
+        "stat_lable_price": {
+            "type": "string"
+        },
+        "stat_url": {
+            "type": "string"
+        }
+    },
+    "config": {}
+}

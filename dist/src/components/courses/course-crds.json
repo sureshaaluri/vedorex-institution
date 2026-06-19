@@ -1,0 +1,15 @@
+{
+    "collectionName": "components_courses_course_crds",
+    "info": {
+        "displayName": "Course_crds"
+    },
+    "options": {},
+    "attributes": {
+        "courses": {
+            "type": "component",
+            "component": "courses.course-card",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

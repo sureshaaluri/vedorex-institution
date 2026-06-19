@@ -1,0 +1,18 @@
+{
+    "collectionName": "components_section_learningpaths",
+    "info": {
+        "displayName": "learningpath"
+    },
+    "options": {},
+    "attributes": {
+        "title": {
+            "type": "string"
+        },
+        "routepath": {
+            "type": "component",
+            "component": "path.routemap",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

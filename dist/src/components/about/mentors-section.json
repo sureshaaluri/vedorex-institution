@@ -1,0 +1,37 @@
+{
+    "collectionName": "components_about_mentors_sections",
+    "info": {
+        "displayName": "Mentors Section"
+    },
+    "options": {},
+    "attributes": {
+        "heading": {
+            "type": "text"
+        },
+        "description": {
+            "type": "text"
+        },
+        "button_text": {
+            "type": "string"
+        },
+        "button_link": {
+            "type": "string"
+        },
+        "main_image": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        },
+        "mentors": {
+            "type": "component",
+            "component": "about.mentor-item",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

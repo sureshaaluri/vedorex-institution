@@ -1,0 +1,29 @@
+{
+    "collectionName": "components_contact_contact_cards",
+    "info": {
+        "displayName": "ContactCard"
+    },
+    "options": {},
+    "attributes": {
+        "icon": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        },
+        "tag_label": {
+            "type": "string"
+        },
+        "title": {
+            "type": "string"
+        },
+        "lines": {
+            "type": "text"
+        }
+    },
+    "config": {}
+}

@@ -1,0 +1,91 @@
+{
+    "kind": "collectionType",
+    "collectionName": "coursespages",
+    "info": {
+        "singularName": "coursespage",
+        "pluralName": "coursespages",
+        "displayName": "courses"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "title": {
+            "type": "string"
+        },
+        "slug": {
+            "type": "uid"
+        },
+        "description": {
+            "type": "string"
+        },
+        "level": {
+            "type": "enumeration",
+            "enum": [
+                "beginner",
+                "intermediate",
+                "advanced"
+            ]
+        },
+        "category": {
+            "type": "string"
+        },
+        "instuctor": {
+            "type": "string"
+        },
+        "duration": {
+            "type": "string"
+        },
+        "ispublic": {
+            "type": "boolean"
+        },
+        "students": {
+            "type": "decimal"
+        },
+        "price": {
+            "type": "decimal"
+        },
+        "badge": {
+            "type": "string"
+        },
+        "thumbnail": {
+            "type": "media",
+            "multiple": true,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        },
+        "topics": {
+            "type": "json"
+        },
+        "is_featured": {
+            "type": "boolean"
+        },
+        "rating": {
+            "type": "decimal"
+        },
+        "owner_email": {
+            "type": "email"
+        },
+        "metatitle": {
+            "type": "string"
+        },
+        "SEOdescription": {
+            "type": "text"
+        },
+        "ogImage": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        }
+    }
+}

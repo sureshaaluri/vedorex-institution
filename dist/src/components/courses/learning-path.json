@@ -1,0 +1,18 @@
+{
+    "collectionName": "components_courses_learning_paths",
+    "info": {
+        "displayName": "Learning_Path"
+    },
+    "options": {},
+    "attributes": {
+        "tag_label": {
+            "type": "string"
+        },
+        "steps": {
+            "type": "component",
+            "component": "courses.new-path-step",
+            "repeatable": true
+        }
+    },
+    "config": {}
+}

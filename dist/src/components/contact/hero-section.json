@@ -1,0 +1,32 @@
+{
+    "collectionName": "components_contact_hero_sections",
+    "info": {
+        "displayName": "Hero_section"
+    },
+    "options": {},
+    "attributes": {
+        "heading": {
+            "type": "string"
+        },
+        "subheading": {
+            "type": "string"
+        },
+        "Description": {
+            "type": "string"
+        },
+        "overlay_Color": {
+            "type": "string"
+        },
+        "background_image": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files",
+                "videos",
+                "audios"
+            ]
+        }
+    },
+    "config": {}
+}
