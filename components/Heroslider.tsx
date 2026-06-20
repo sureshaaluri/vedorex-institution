@@ -233,7 +233,7 @@ export default function HeroSlider({ data }: { data: HeroSliderData }) {
                             <div
                               className={`position-absolute bottom-0 start-0 end-0 d-flex ${styles.statsOverlay}`}
                             >
-                              {slide.stats.map((stat) => (
+                              {/* {slide.stats.map((stat) => (
                                 <div
                                   key={stat.id}
                                   className={`flex-fill text-center py-3 ${styles.statItem}`}
@@ -253,7 +253,7 @@ export default function HeroSlider({ data }: { data: HeroSliderData }) {
                                     {stat.label}
                                   </div>
                                 </div>
-                              ))}
+                              ))} */}
                             </div>
                           )}
                         </div>

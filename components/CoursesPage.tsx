@@ -250,22 +250,22 @@ export default function CoursesPage({ hero, courses }: Props) {
           <h2 className={styles.heroSubtitle}>{hero?.hero_Subheading}</h2>
           <p className={styles.heroDescription}>{hero?.herodescription}</p>
           <div className={styles.stats}>
-            <div>
+            {/* <div>
               <strong>{hero?.staCourses}</strong>
               <span>Courses</span>
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <strong>{hero?.statStudent}</strong>
               <span>Students</span>
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <strong>{hero?.staprojects}</strong>
               <span>Projects</span>
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <strong>{hero?.statrating}⭐</strong>
               <span>Rating</span>
-            </div>
+            </div> */}
           </div>
           <button className={styles.ctaBtn}>{hero?.heroctalable}</button>
         </div>
@@ -308,11 +308,11 @@ export default function CoursesPage({ hero, courses }: Props) {
                 )}
               </div>
               <h3>{course.title}</h3>
-              <div className={styles.cardMeta}>
+              {/* <div className={styles.cardMeta}>
                 <span>{course.level}</span>
                 <span>{course.duration}</span>
                 <span>👥 {course.students}</span>
-              </div>
+              </div> */}
             </div>
           ))}
         </div>
@@ -328,7 +328,7 @@ export default function CoursesPage({ hero, courses }: Props) {
             </div>
             <h2>{selected.title}</h2>
             <p>{selected.description}</p>
-            <div className={styles.detailMeta}>
+            {/* <div className={styles.detailMeta}>
               <span>📊 {selected.level}</span>
               <span>⏱ {selected.duration}</span>
               <span>👥 {selected.students} students</span>
@@ -336,7 +336,7 @@ export default function CoursesPage({ hero, courses }: Props) {
                 {selected.price === 0 ? "🆓 Free" : `💰 ₹${selected.price}`}
               </span>
               <span>⭐ {selected.rating}</span>
-            </div>
+            </div> */}
 
             {selected.topics?.length > 0 && (
               <>
