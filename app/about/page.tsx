@@ -23,8 +23,8 @@ export default async function AboutPage() {
           case "about.edtech-section":
             return <Edtech key={section.id} data={section} />;
 
-          case "about.stats-section":
-            return <Stats key={section.id} data={section} />;
+          // case "about.stats-section":
+          //   return <Stats key={section.id} data={section} />;
 
           case "about.mentors-section":
             return <Mentors key={section.id} data={section} />;
