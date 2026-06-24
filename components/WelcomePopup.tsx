@@ -38,7 +38,7 @@ export default function WelcomePopup({ data }: { data: any }) {
           background: "#fff",
           borderRadius: 8,
           width: "100%",
-          maxWidth: 448,
+          maxWidth: 600,
           overflow: "hidden",
           boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
         }}
