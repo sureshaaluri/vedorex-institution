@@ -96,11 +96,11 @@ const styles = `
 
 .t-avatar{
   object-fit:cover;
-  border:3px solid #5C44D8;
+  border:3px solid #547cd3;
 }
 
 .t-avatar-placeholder{
-  background:linear-gradient(135deg,#5C44D8,#a855f7);
+  background:linear-gradient(135deg,#5C44D8,#547cd3);
   color:#fff;
   display:flex;
   align-items:center;

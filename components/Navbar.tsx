@@ -24,7 +24,6 @@ interface NavbarData {
   nav_links: NavLink[];
 }
 
-// ✅ Receive data as prop instead of fetching
 export default function Navbar({ data }: { data: NavbarData }) {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();

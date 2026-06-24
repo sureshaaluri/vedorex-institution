@@ -123,7 +123,7 @@ const styles = `
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #5C44D8, #a855f7);
+    background: linear-gradient(135deg, #5C44D8, #547cd3);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -167,14 +167,14 @@ const styles = `
 
   .wcu-duration {
     font-size: 13px;
-    color: #5C44D8;
+    color: #547cd3;
     font-weight: 600;
     white-space: nowrap;
   }
 
   .wcu-link {
     font-size: 13px;
-    color: #5C44D8;
+    color: #547cd3;
     font-weight: 600;
     text-decoration: none;
     display: flex;

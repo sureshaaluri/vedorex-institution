@@ -395,7 +395,7 @@ const imageUrl = data.image?.url
                 className="btn w-100 py-3 text-white fw-bold"
                 disabled={status === "loading"}
                 style={{
-                  background: "linear-gradient(135deg, #5C44D8, #a855f7)",
+                  background: "linear-gradient(135deg, #5C44D8, #547cd3)",
                   border: "none",
                   borderRadius: "8px",
                   fontSize: "14px",

@@ -191,7 +191,7 @@ const styles = `
   }
 
   .course-btn {
-    background: linear-gradient(80deg, #5C44D8, #a855f7);
+    background: linear-gradient(80deg, #5C44D8, #547cd3);
     color: #fff;
     font-size: clamp(11px, 1.2vw, 13px);
     border: none;

@@ -10,7 +10,7 @@
 .row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;    /* ✅ changed to flex-start for sticky positioning */
+  align-items: flex-end;    /* ✅ everything aligns to bottom */
   gap: 32px;
 }
 
@@ -20,10 +20,6 @@
   max-width: 50%;
   display: flex;
   align-items: flex-end;    /* ✅ image sits at bottom */
-  position: sticky;
-  top: 0;
-  height: fit-content;
-  align-self: flex-start;
 }
 
 .imageCol img {
@@ -41,9 +37,6 @@
   display: flex;
   flex-direction: column;
   padding-bottom: 24px;     /* ✅ content has breathing room at bottom */
-  max-height: 600px;        /* ✅ set fixed height for scrolling */
-  overflow-y: auto;         /* ✅ enable vertical scrolling */
-  padding-right: 12px;      /* ✅ space for scrollbar */
 }
 
 .tag {
@@ -86,7 +79,7 @@
   width: 42px;
   height: 42px;
   border-radius: 10px;
-  background: linear-gradient(90deg, #9333ea, #3b82f6);
+  background: linear-gradient(90deg, #547cd3, #3b82f6);
   display: flex;
   align-items: center;
   justify-content: center;

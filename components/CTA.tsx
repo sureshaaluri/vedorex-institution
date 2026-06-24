@@ -42,7 +42,7 @@ export default function CTA({ data }: { data: CTAData }) {
         className="fw-bold mb-4"
         style={{
           fontSize: "clamp(24px, 3.5vw, 42px)",
-          color: "#A855F7",
+          color: "#547cd3",
           position: "relative",
         }}
       >
@@ -53,7 +53,7 @@ export default function CTA({ data }: { data: CTAData }) {
         href={data.ButtonUrl}
         className="btn rounded-pill px-5 py-2"
         style={{
-          background: "linear-gradient(135deg, #5C44D8, #a855f7)",
+          background: "linear-gradient(135deg, #5C44D8, #547cd3)",
           color: "#fff",
           border: "none",
           fontSize: "16px",
