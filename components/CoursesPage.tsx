@@ -89,7 +89,6 @@ function Breadcrumb({ course }: { course: Course | null }) {
 }
 
 // ── SINGLE ACCORDION ──
-// ── SINGLE ACCORDION ──
 function SingleAccordion({
   topics,
   courseTitle,
@@ -97,7 +96,7 @@ function SingleAccordion({
   topics: Topic[];
   courseTitle: string;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   return (
     <div style={{ margin: "12px 0 24px" }}>
