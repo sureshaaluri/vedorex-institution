@@ -58,12 +58,12 @@ export default function Mentors({ data }: { data: MentorData }) {
             </div>
 
             {/* Button */}
-            <a
+            {/* <a
               href={data.button_url}
               className={`btn text-white fw-semibold ${styles.btnCustom}`}
             >
               {data.button_text}
-            </a>
+            </a> */}
 
           </div>
 
