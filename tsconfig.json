@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "app/coursespage", "app/coursespage"  ],
+, "app/courses", "app/courses"  ],
   "exclude": ["node_modules"]
 }

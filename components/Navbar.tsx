@@ -53,7 +53,7 @@ export default function Navbar({ data }: { data: NavbarData }) {
       "/home-page": "/",
       "/about-us": "/about",
       "/contact-us": "/contact",
-      "/courses": "/CoursesPage",
+      "/courses": "/courses",
     };
 
     return routeMap[clean] || clean;

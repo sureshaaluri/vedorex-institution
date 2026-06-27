@@ -3,7 +3,7 @@ import CourseHighlight from "@/components/CourseHighlight";
 import CTA from "@/components/CTA";
 import CourseCategories from "@/components/CourseCategories";
 import Testimonials from "@/components/Testimonials";
-import WhyChooseUs from "@/components/WhyChooseUs";
+import WhyChooseUs from "@/components/WhyChooseUs"; 
 import TopCourses from "@/components/TopCourses";
 
 
@@ -46,8 +46,7 @@ export default async function Home() {
         if (section.__component === "section.top-courses") {
           return <TopCourses key={`${section.__component}-${section.id}`} data={section} />;
         }
-      
-
+    
         return null;
       })}
     </main>

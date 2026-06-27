@@ -1,4 +1,4 @@
-import CoursesPage from "@/components/CoursesPage";
+import CoursesPage from "@/components/Courses";
 import { API_ENDPOINTS } from "@/lib/constants";
 
 export const revalidate = 60;

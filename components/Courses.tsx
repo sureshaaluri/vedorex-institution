@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
-import styles from "./CoursesPage.module.css";
+import styles from "./Courses.module.css";
 import { STRAPI_URL } from "@/lib/constants";
 
 interface Topic {
@@ -60,13 +60,7 @@ function Breadcrumb({ course }: { course: Course | null }) {
     { label: "Home", href: "/" },
     { label: "Courses", href: "/courses" },
     ...(course
-      ? [
-          {
-            label: course.category || "Course",
-            href: `/courses?category=${(course.category || "").toLowerCase().replace(/\s+/g, "-")}`,
-          },
-          { label: course.title, href: `/courses/${course.slug}` },
-        ]
+      ? [{ label: course.title, href: `/courses/${course.slug}` }]  
       : []),
   ];
 
