@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import styles from "./CoursesPage.module.css";
 import { STRAPI_URL } from "@/lib/constants";
@@ -231,6 +231,19 @@ function SingleAccordion({
 // ── MAIN COMPONENT ──
 export default function CoursesPage({ hero, courses }: Props) {
   const [selected, setSelected] = useState<Course>(courses?.[0]);
+  const breadcrumbRef = useRef<HTMLDivElement>(null);
+  const learningpathRef = useRef<HTMLDivElement>(null); // ← added
+
+  function selectCourse(course: Course) {
+    setSelected(course);
+    setTimeout(() => {
+      if (learningpathRef.current) {
+        const navHeight = document.querySelector('nav')?.offsetHeight ?? 64;
+        const top = learningpathRef.current.getBoundingClientRect().top + window.scrollY - navHeight;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }, 50);
+  }
 
   return (
     <div>
@@ -272,23 +285,27 @@ export default function CoursesPage({ hero, courses }: Props) {
 
       {/* LEARNING PATH */}
       {hero?.larningpath?.length > 0 && (
-        <section className={styles.learningPath}>
-          <h2>{hero.larningpath[0].title}</h2>
-          <div className={styles.routepath}>
-            {hero.larningpath[0].routepath.map((step, index) => (
-              <div key={step.id} className={styles.routeStep}>
-                <span className={styles.stepTitle}>{step.title}</span>
-                {index < hero.larningpath[0].routepath.length - 1 && (
-                  <span className={styles.arrow}>→</span>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
+        <div ref={learningpathRef}>
+          <section className={styles.learningPath} style={{ scrollMarginTop: "80px" }}> {/* ← added scrollMarginTop */}
+            <h2>{hero.larningpath[0].title}</h2>
+            <div className={styles.routepath}>
+              {hero.larningpath[0].routepath.map((step, index) => (
+                <div key={step.id} className={styles.routeStep}>
+                  <span className={styles.stepTitle}>{step.title}</span>
+                  {index < hero.larningpath[0].routepath.length - 1 && (
+                    <span className={styles.arrow}>→</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
       )}
 
       {/* BREADCRUMB */}
-      <Breadcrumb course={selected} />
+      <div ref={breadcrumbRef}> {/* ← added wrapper */}
+        <Breadcrumb course={selected} />
+      </div>
 
       {/* COURSES SECTION */}
       <section className={styles.coursesSection}>
@@ -298,7 +315,7 @@ export default function CoursesPage({ hero, courses }: Props) {
             <div
               key={course.id}
               className={`${styles.card} ${selected?.id === course.id ? styles.active : ""}`}
-              onClick={() => setSelected(course)}
+              onClick={() => selectCourse(course)} // ← changed from setSelected
             >
               <div className={styles.cardTop}>
                 <span className={styles.category}>{course.category}</span>
