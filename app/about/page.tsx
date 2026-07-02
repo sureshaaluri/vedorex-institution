@@ -1,9 +1,33 @@
+import type { Metadata } from "next";
 import { getAboutData } from "@/lib/api";
 import Hero from "@/components/About/Hero";
 import Edtech from "@/components/About/Edtech";
 import Stats from "@/components/About/Stats";
 import Mentors from "@/components/About/Mentors";
 import WhyChooseUs from "@/components/About/WhyChooseUs";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const about = await getAboutData();
+  const seo = about?.seo;
+
+  const description =
+    seo?.metaDescription ||
+    "Learn about Vedorex Academy — our mission, expert mentors, and industry-focused training programs designed to launch your tech career.";
+
+  const title = seo?.metaTitle || "About Us";
+
+  const imageUrl = seo?.metaImage?.data?.attributes?.url ?? seo?.metaImage?.url;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: imageUrl ? [{ url: imageUrl }] : undefined,
+    },
+  };
+}
 
 export default async function AboutPage() {
   const about = await getAboutData();

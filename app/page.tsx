@@ -1,24 +1,48 @@
+import type { Metadata } from "next";
 import HeroSlider from "@/components/Heroslider";
 import CourseHighlight from "@/components/CourseHighlight";
 import CTA from "@/components/CTA";
 import CourseCategories from "@/components/CourseCategories";
 import Testimonials from "@/components/Testimonials";
-import WhyChooseUs from "@/components/WhyChooseUs"; 
+import WhyChooseUs from "@/components/WhyChooseUs";
 import TopCourses from "@/components/TopCourses";
-
 
 import { API_ENDPOINTS, APP_CONFIG } from "@/lib/constants";
 
 async function getHomeData() {
-  const res = await fetch(API_ENDPOINTS.HOME_PAGE, {
+  const res = await fetch(`${API_ENDPOINTS.HOME_PAGE}?populate=seo.metaImage`, {
     cache: APP_CONFIG.apiCacheMode as any,
   });
   const json = await res.json();
-  return json.data.sections;
+  return json.data;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const homeData = await getHomeData();
+  const seo = homeData?.seo;
+
+  const description =
+    seo?.metaDescription ||
+    "Vedorex Academy offers industry-focused training in Web Development, Programming, Data Science, and AI with hands-on projects, expert mentors, and 100% placement assistance.";
+
+  const title = seo?.metaTitle || "Vedorex Academy";
+
+  const imageUrl = seo?.metaImage?.data?.attributes?.url ?? seo?.metaImage?.url;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: imageUrl ? [{ url: imageUrl }] : undefined,
+    },
+  };
 }
 
 export default async function Home() {
-  const sections = await getHomeData();
+  const homeData = await getHomeData();
+  const sections = homeData.sections;
 
   return (
     <main style={{ minHeight: "100vh" }}>
@@ -46,7 +70,7 @@ export default async function Home() {
         if (section.__component === "section.top-courses") {
           return <TopCourses key={`${section.__component}-${section.id}`} data={section} />;
         }
-    
+
         return null;
       })}
     </main>
