@@ -19,6 +19,11 @@
         "contact.map-section",
         "contact.contact-form"
       ]
+    },
+    "SEO": {
+      "type": "component",
+      "component": "shared.seo",
+      "repeatable": true
     }
   }
 }

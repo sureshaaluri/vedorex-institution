@@ -71,12 +71,6 @@
         "owner_email": {
             "type": "email"
         },
-        "metatitle": {
-            "type": "string"
-        },
-        "SEOdescription": {
-            "type": "text"
-        },
         "ogImage": {
             "type": "media",
             "multiple": false,
@@ -86,6 +80,11 @@
                 "videos",
                 "audios"
             ]
+        },
+        "SEO": {
+            "type": "component",
+            "component": "shared.seo",
+            "repeatable": false
         }
     }
 }

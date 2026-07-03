@@ -565,6 +565,18 @@ export interface SectionWhyChooseUs extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedSeo extends Struct.ComponentSchema {
+  collectionName: 'components_shared_seos';
+  info: {
+    displayName: 'seo';
+  };
+  attributes: {
+    metaDescription: Schema.Attribute.Text;
+    metaKeywords: Schema.Attribute.Text;
+    metaTitle: Schema.Attribute.String;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
@@ -612,6 +624,7 @@ declare module '@strapi/strapi' {
       'section.testimonials-card': SectionTestimonialsCard;
       'section.top-courses': SectionTopCourses;
       'section.why-choose-us': SectionWhyChooseUs;
+      'shared.seo': SharedSeo;
     }
   }
 }

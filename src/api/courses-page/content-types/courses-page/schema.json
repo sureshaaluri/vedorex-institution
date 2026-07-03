@@ -49,6 +49,11 @@
       "type": "component",
       "component": "section.learningpath",
       "repeatable": true
+    },
+    "SEO": {
+      "type": "component",
+      "component": "shared.seo",
+      "repeatable": false
     }
   }
 }

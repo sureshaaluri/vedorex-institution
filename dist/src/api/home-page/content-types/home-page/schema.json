@@ -22,6 +22,11 @@
                 "section.why-choose-us",
                 "section.top-courses"
             ]
+        },
+        "SEO": {
+            "type": "component",
+            "component": "shared.seo",
+            "repeatable": false
         }
     }
 }

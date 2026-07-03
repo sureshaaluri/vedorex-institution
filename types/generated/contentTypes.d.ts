@@ -460,6 +460,7 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
         'about.why-choose-us',
       ]
     >;
+    SEO: Schema.Attribute.Component<'shared.seo', false>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -495,6 +496,7 @@ export interface ApiContactPageContactPage extends Struct.SingleTypeSchema {
         'contact.contact-form',
       ]
     >;
+    SEO: Schema.Attribute.Component<'shared.seo', true>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -531,6 +533,7 @@ export interface ApiCoursesPageCoursesPage extends Struct.SingleTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    SEO: Schema.Attribute.Component<'shared.seo', false>;
     staCourses: Schema.Attribute.BigInteger;
     staprojects: Schema.Attribute.String;
     statrating: Schema.Attribute.Decimal;
@@ -571,13 +574,12 @@ export interface ApiCoursespageCoursespage extends Struct.CollectionTypeSchema {
       'api::coursespage.coursespage'
     > &
       Schema.Attribute.Private;
-    metatitle: Schema.Attribute.String;
     ogImage: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     owner_email: Schema.Attribute.Email;
     price: Schema.Attribute.Decimal;
     publishedAt: Schema.Attribute.DateTime;
     rating: Schema.Attribute.Decimal;
-    SEOdescription: Schema.Attribute.Text;
+    SEO: Schema.Attribute.Component<'shared.seo', false>;
     slug: Schema.Attribute.UID;
     students: Schema.Attribute.Decimal;
     thumbnail: Schema.Attribute.Media<
@@ -692,6 +694,7 @@ export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
         'section.top-courses',
       ]
     >;
+    SEO: Schema.Attribute.Component<'shared.seo', false>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

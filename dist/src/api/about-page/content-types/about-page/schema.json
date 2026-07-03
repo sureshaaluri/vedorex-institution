@@ -20,6 +20,11 @@
                 "about.mentors-section",
                 "about.why-choose-us"
             ]
+        },
+        "SEO": {
+            "type": "component",
+            "component": "shared.seo",
+            "repeatable": false
         }
     }
 }
