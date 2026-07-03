@@ -8,25 +8,25 @@ import WhyChooseUs from "@/components/About/WhyChooseUs";
 
 export async function generateMetadata(): Promise<Metadata> {
   const about = await getAboutData();
-  const seo = about?.seo;
+  const seo = about?.SEO; // Note: capitalized field name in Strapi schema
 
-  const description =
-    seo?.metaDescription ||
-    "Learn about Vedorex Academy — our mission, expert mentors, and industry-focused training programs designed to launch your tech career.";
+  const metadata: Metadata = {};
 
-  const title = seo?.metaTitle || "About Us";
+  if (seo?.metaTitle) metadata.title = seo.metaTitle;
+  if (seo?.metaDescription) metadata.description = seo.metaDescription;
+  if (seo?.metaKeywords) metadata.keywords = seo.metaKeywords;
 
   const imageUrl = seo?.metaImage?.data?.attributes?.url ?? seo?.metaImage?.url;
 
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: imageUrl ? [{ url: imageUrl }] : undefined,
-    },
-  };
+  if (seo?.metaTitle || seo?.metaDescription || imageUrl) {
+    metadata.openGraph = {
+      ...(seo?.metaTitle && { title: seo.metaTitle }),
+      ...(seo?.metaDescription && { description: seo.metaDescription }),
+      ...(imageUrl && { images: [{ url: imageUrl }] }),
+    };
+  }
+
+  return metadata;
 }
 
 export default async function AboutPage() {
@@ -63,4 +63,4 @@ export default async function AboutPage() {
       })}
     </>
   );
-}
+} 

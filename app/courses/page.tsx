@@ -15,23 +15,22 @@ export async function generateMetadata(): Promise<Metadata> {
   const pageRes = await getCoursesPageData();
   const seo = pageRes?.data?.seo;
 
-  const description =
-    seo?.metaDescription ||
-    "Explore Vedorex Academy's courses in Web Development, Programming, Data Science, and AI — hands-on training with expert mentors and placement support.";
+  const metadata: Metadata = {};
 
-  const title = seo?.metaTitle || "Courses";
+  if (seo?.metaTitle) metadata.title = seo.metaTitle;
+  if (seo?.metaDescription) metadata.description = seo.metaDescription;
+  if (seo?.metaKeywords) metadata.keywords = seo.metaKeywords;
 
   const imageUrl = seo?.metaImage?.data?.attributes?.url ?? seo?.metaImage?.url;
+  if (seo?.metaTitle || seo?.metaDescription || imageUrl) {
+    metadata.openGraph = {
+      ...(seo?.metaTitle && { title: seo.metaTitle }),
+      ...(seo?.metaDescription && { description: seo.metaDescription }),
+      ...(imageUrl && { images: [{ url: imageUrl }] }),
+    };
+  }
 
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: imageUrl ? [{ url: imageUrl }] : undefined,
-    },
-  };
+  return metadata;
 }
 
 export default async function CoursesPageRoute() {
