@@ -6,7 +6,7 @@
     "options": {},
     "attributes": {
         "metaTitle": {
-            "type": "string"
+            "type": "text"
         },
         "metaDescription": {
             "type": "text"

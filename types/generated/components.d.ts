@@ -573,7 +573,7 @@ export interface SharedSeo extends Struct.ComponentSchema {
   attributes: {
     metaDescription: Schema.Attribute.Text;
     metaKeywords: Schema.Attribute.Text;
-    metaTitle: Schema.Attribute.String;
+    metaTitle: Schema.Attribute.Text;
   };
 }
 

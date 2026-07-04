@@ -6,7 +6,11 @@ import usersPermissions from "@strapi/plugin-users-permissions/strapi-admin";
 import coursesShowcase from "../../src/plugins/courses-showcase/strapi-admin";
 import { renderAdmin } from "@strapi/strapi/admin";
 
+import customisations from "../../src/admin/app.tsx";
+
 renderAdmin(document.getElementById("strapi"), {
+  customisations,
+
   plugins: {
     "users-permissions": usersPermissions,
     "courses-showcase": coursesShowcase,
