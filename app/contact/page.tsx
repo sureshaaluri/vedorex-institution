@@ -8,25 +8,25 @@ import Mapsection from "@/components/contact/Mapsection";
 
 export async function generateMetadata(): Promise<Metadata> {
   const contact = await getContactData();
-  const seo = contact?.seo;
+  const seo = contact?.SEO; // Note: capitalized field name in Strapi schema (matches About/Courses)
 
-  const description =
-    seo?.metaDescription ||
-    "Get in touch with Vedorex Academy. Reach out for course enquiries, admissions, or support — we're here to help you start your tech career.";
+  const metadata: Metadata = {};
 
-  const title = seo?.metaTitle || "Contact Us";
+  if (seo?.metaTitle) metadata.title = seo.metaTitle;
+  if (seo?.metaDescription) metadata.description = seo.metaDescription;
+  if (seo?.metaKeywords) metadata.keywords = seo.metaKeywords;
 
   const imageUrl = seo?.metaImage?.data?.attributes?.url ?? seo?.metaImage?.url;
 
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: imageUrl ? [{ url: imageUrl }] : undefined,
-    },
-  };
+  if (seo?.metaTitle || seo?.metaDescription || imageUrl) {
+    metadata.openGraph = {
+      ...(seo?.metaTitle && { title: seo.metaTitle }),
+      ...(seo?.metaDescription && { description: seo.metaDescription }),
+      ...(imageUrl && { images: [{ url: imageUrl }] }),
+    };
+  }
+
+  return metadata;
 }
 
 export default async function ContactPage() {
@@ -39,20 +39,14 @@ export default async function ContactPage() {
   return (
     <>
       {contact.sections.map((section: any, index: number) => {
-        //                              ↑ index add చేయండి
         switch (section.__component) {
-
           case "contact.hero-section":
             return <Herosection key={`hero-${index}`} data={section} />;
-            //                  ↑ unique key
 
-    
-
-  
           case "contact.contact-form":
             return <ContactForm key={`form-${index}`} data={section} />;
-          case "contact.map-section":
 
+          case "contact.map-section":
             return <Mapsection key={`map-${index}`} data={section} />;
 
           default:

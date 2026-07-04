@@ -22,6 +22,7 @@ export const APP_CONFIG = {
  * API Endpoints
  */
 export const API_ENDPOINTS = {
+  GLOBAL: `${STRAPI_URL}/api/global`,
   ABOUT_PAGE: `${STRAPI_URL}/api/about-page`,
   CONTACT_PAGE: `${STRAPI_URL}/api/contact-page`,
   HOME_PAGE: `${STRAPI_URL}/api/home-page`,

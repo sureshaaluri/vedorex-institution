@@ -1,205 +1,386 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { API_ENDPOINTS, STRAPI_URL } from "@/lib/constants";
+"use client";
 
-export const revalidate = 60;
+import { useState, useRef } from "react";
+import Link from "next/link";
+import styles from "./Courses.module.css";
+import { STRAPI_URL } from "@/lib/constants";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
-async function getCourseBySlug(slug: string) {
-  const url = `${API_ENDPOINTS.COURSES}?filters[slug][$eq]=${slug}&populate=*`;
-
-  const res = await fetch(url, { next: { revalidate: 60 } });
-  const json = await res.json();
-
-  return json?.data?.[0] ?? null;
+interface Topic {
+  title: string;
+  content: string;
 }
 
-export async function generateMetadata(
-  { params }: { params: Promise<{ slug: string }> }
-): Promise<Metadata> {
-  const { slug } = await params; // Next.js 16 requires awaiting params
-  const course = await getCourseBySlug(slug);
-  if (!course) return {};
-
-  const seo = course.SEO; // Note: capitalized field, matches Strapi schema for courses
-  const metadata: Metadata = {};
-
-  if (seo?.metaTitle) metadata.title = seo.metaTitle;
-  if (seo?.metaDescription) metadata.description = seo.metaDescription;
-  if (seo?.metaKeywords) metadata.keywords = seo.metaKeywords;
-
-  const imageUrl =
-    seo?.metaImage?.data?.attributes?.url ??
-    seo?.metaImage?.url ??
-    course.thumbnail?.url;
-
-  if (seo?.metaTitle || seo?.metaDescription || imageUrl) {
-    metadata.openGraph = {
-      ...(seo?.metaTitle && { title: seo.metaTitle }),
-      ...(seo?.metaDescription && { description: seo.metaDescription }),
-      ...(imageUrl && { images: [{ url: imageUrl }] }),
-    };
-  }
-
-  return metadata;
+interface Course {
+  id: number;
+  documentId: string;
+  title: string;
+  slug: string;
+  description: string;
+  level: string;
+  category: string;
+  instuctor: string | null;
+  duration: string;
+  students: number;
+  rating: number;
+  badge: string | null;
+  topics: Topic[];
+  ispublic: boolean;
+  price: number;
+  is_featured: boolean | null;
 }
 
-export default async function CourseDetailPage(
-  { params }: { params: Promise<{ slug: string }> }
-) {
-  const { slug } = await params;
-  const course = await getCourseBySlug(slug);
-  if (!course) {
-    notFound();
-  }
+interface HeroData {
+  Hero_Heading: string;
+  hero_Subheading: string;
+  herodescription: string;
+  heroctalable: string;
+  statStudent: string;
+  staprojects: string;
+  staCourses: string;
+  statrating: number;
+  heroimage: { url: string }[];
+  larningpath: {
+    id: number;
+    title: string;
+    routepath: {
+      id: number;
+      title: string;
+    }[];
+  }[];
+}
 
-  // Resolve an absolute image URL for structured data (Strapi returns relative paths)
-  const rawImageUrl =
-    course.SEO?.metaImage?.data?.attributes?.url ??
-    course.SEO?.metaImage?.url ??
-    course.thumbnail?.url ??
-    null;
-  const absoluteImageUrl = rawImageUrl
-    ? rawImageUrl.startsWith("http")
-      ? rawImageUrl
-      : `${STRAPI_URL}${rawImageUrl}`
-    : undefined;
+interface Props {
+  hero: HeroData;
+  courses: Course[];
+}
 
-  // JSON-LD Course schema — helps Google show rich results (rating, provider, price)
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Course",
-    name: course.title,
-    description: course.description,
-    provider: {
-      "@type": "Organization",
-      name: "Vedorex Academy",
-      sameAs: SITE_URL,
-    },
-    ...(absoluteImageUrl && { image: absoluteImageUrl }),
-    ...(course.rating && {
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: course.rating,
-        ratingCount: course.students || 1,
-      },
-    }),
-    ...(typeof course.price === "number" && {
-      offers: {
-        "@type": "Offer",
-        price: course.price,
-        priceCurrency: "INR",
-        category: course.price === 0 ? "Free" : "Paid",
-      },
-    }),
-  };
+// ── BREADCRUMB ──
+function Breadcrumb({ course }: { course: Course | null }) {
+  const crumbs = [
+    { label: "Home", href: "/" },
+    { label: "Courses", href: "/courses" },
+    ...(course
+      ? [{ label: course.title, href: `/courses/${course.slug}` }]
+      : []),
+  ];
 
   return (
-    <div className="Courses-module__mQnfCa__detail" style={{ maxWidth: 900, margin: "0 auto", padding: "40px 20px" }}>
-      {/* Structured data for search engines */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+    <nav className={styles.breadcrumb}>
+      {crumbs.map((c, i) => (
+        <span key={i} className={styles.breadcrumbItem}>
+          {i > 0 && <span className={styles.breadcrumbSep}>›</span>}
+          {i === crumbs.length - 1 ? (
+            <span className={styles.breadcrumbActive}>{c.label}</span>
+          ) : (
+            <Link href={c.href} className={styles.breadcrumbLink}>
+              {c.label}
+            </Link>
+          )}
+        </span>
+      ))}
+    </nav>
+  );
+}
 
+// ── SINGLE ACCORDION ──
+function SingleAccordion({
+  topics,
+  courseTitle,
+}: {
+  topics: Topic[];
+  courseTitle: string;
+}) {
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (
+    <div style={{ margin: "12px 0 24px" }}>
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingBottom: 16,
+          background: isOpen
+            ? "rgba(167,139,250,.08)"
+            : "rgba(255,255,255,.03)",
+          border: `1px solid ${isOpen ? "rgba(167,139,250,.35)" : "rgba(255,255,255,.08)"}`,
+          borderRadius: 8,
+          overflow: "hidden",
+          transition: "all .2s",
         }}
       >
-        <nav className="Courses-module__mQnfCa__breadcrumb" style={{ padding: 0 }}>
-          <span className="Courses-module__mQnfCa__breadcrumbItem">
-            <a href="/">Home</a>
-          </span>
-          <span className="Courses-module__mQnfCa__breadcrumbItem">
-            <span className="Courses-module__mQnfCa__breadcrumbSep">›</span>
-            <a href="/courses">Courses</a>
-          </span>
-          <span className="Courses-module__mQnfCa__breadcrumbItem">
-            <span className="Courses-module__mQnfCa__breadcrumbSep">›</span>
-            <span>{course.title}</span>
-          </span>
-        </nav>
-
-        <a
-          href="/courses"
+        {/* Header */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
           style={{
-            display: "inline-flex",
+            width: "100%",
+            display: "flex",
             alignItems: "center",
-            gap: 6,
-            fontSize: 14,
-            fontWeight: 600,
-            color: "#2563eb",
-            textDecoration: "none",
-            whiteSpace: "nowrap",
+            gap: 10,
+            padding: "14px 16px",
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            fontFamily: "inherit",
+            textAlign: "left",
           }}
         >
-          ← Back to Courses
-        </a>
+          <span
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              color: isOpen ? "#a78bfa" : "#020101",
+              flex: 1,
+              transition: "color .2s",
+            }}
+          >
+            Course Curriculum — {topics.length} topics
+          </span>
+          <span
+            style={{
+              fontSize: 16,
+              color: isOpen ? "#a78bfa" : "rgba(0,0,0,0.4)",
+              transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+              transition: "transform .22s",
+              display: "inline-block",
+            }}
+          >
+            ▾
+          </span>
+        </button>
+
+        {/* Body */}
+        {isOpen && (
+          <div
+            style={{
+              padding: "8px 20px 24px 20px",
+              borderTop: "1px solid rgba(0,0,0,0.08)",
+            }}
+          >
+            {/* Course title */}
+            <h3
+              style={{
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#1a1a2e",
+                margin: "16px 0 16px",
+              }}
+            >
+              {courseTitle}
+            </h3>
+
+            {/* Each topic = section heading + bullet points from content */}
+            {topics.map((topic, i) => {
+              // Split content into bullet points by ". " or ","
+              const bullets = topic.content
+                ? topic.content
+                    .split(/[.,;]\s*/)
+                    .map((s) => s.trim())
+                    .filter(Boolean)
+                : [];
+              return (
+                <div key={i} style={{ marginBottom: 16 }}>
+                  {/* Section heading in blue */}
+                  <p
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "#2563eb",
+                      margin: "0 0 8px",
+                    }}
+                  >
+                    {topic.title}
+                  </p>
+
+                  {/* Bullet points from content */}
+                  <ul
+                    style={{
+                      listStyle: "disc",
+                      paddingLeft: 22,
+                      margin: 0,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 6,
+                    }}
+                  >
+                    {bullets.map((point, j) => (
+                      <li
+                        key={j}
+                        style={{
+                          fontSize: 13,
+                          color: "#1a1a2e",
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
+    </div>
+  );
+}
 
-      <div className="Courses-module__mQnfCa__detailHeader">
-        <span className="Courses-module__mQnfCa__category">{course.category}</span>
-        {course.badge && <span className="Courses-module__mQnfCa__badge">{course.badge}</span>}
-      </div>
+// ── MAIN COMPONENT ──
+export default function CoursesPage({ hero, courses }: Props) {
+  const [selected, setSelected] = useState<Course>(courses?.[0]);
+  const breadcrumbRef = useRef<HTMLDivElement>(null);
+  const learningpathRef = useRef<HTMLDivElement>(null); // ← added
 
-      <h1>{course.title}</h1>
-      <p>{course.description}</p>
+  function selectCourse(course: Course) {
+    setSelected(course);
+    setTimeout(() => {
+      if (learningpathRef.current) {
+        const navHeight = document.querySelector('nav')?.offsetHeight ?? 64;
+        const top = learningpathRef.current.getBoundingClientRect().top + window.scrollY - navHeight;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }, 50);
+  }
 
-      {Array.isArray(course.topics) && course.topics.length > 0 && (
-        <div style={{ margin: "24px 0" }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 16 }}>
-            Course Curriculum — {course.topics.length} topics
-          </h2>
-          {course.topics.map((topic: any, i: number) => (
-            <div key={i} style={{ marginBottom: 16 }}>
-              <p style={{ fontSize: 14, fontWeight: 700, color: "#2563eb", margin: "0 0 6px" }}>
-                {topic.title}
-              </p>
-              <p style={{ fontSize: 14, color: "#1a1a2e", lineHeight: 1.6 }}>{topic.content}</p>
+  return (
+    <div>
+      {/* HERO */}
+      <section
+        className={styles.hero}
+        style={{
+          backgroundImage: hero?.heroimage?.[0]?.url
+            ? `url(${STRAPI_URL}${hero.heroimage[0].url})`
+            : undefined,
+        }}
+      >
+        <div className={styles.heroOverlay} />
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>{hero?.Hero_Heading}</h1>
+          <h2 className={styles.heroSubtitle}>{hero?.hero_Subheading}</h2>
+          <p className={styles.heroDescription}>{hero?.herodescription}</p>
+          <div className={styles.stats}>
+            {/* <div>
+              <strong>{hero?.staCourses}</strong>
+              <span>Courses</span>
+            </div> */}
+            {/* <div>
+              <strong>{hero?.statStudent}</strong>
+              <span>Students</span>
+            </div> */}
+            {/* <div>
+              <strong>{hero?.staprojects}</strong>
+              <span>Projects</span>
+            </div> */}
+            {/* <div>
+              <strong>{hero?.statrating}⭐</strong>
+              <span>Rating</span>
+            </div> */}
+          </div>
+          <button className={styles.ctaBtn}>{hero?.heroctalable}</button>
+        </div>
+      </section>
+
+      {/* LEARNING PATH */}
+      {hero?.larningpath?.length > 0 && (
+        <div ref={learningpathRef}>
+          <section className={styles.learningPath} style={{ scrollMarginTop: "80px" }}> {/* ← added scrollMarginTop */}
+            <h2>{hero.larningpath[0].title}</h2>
+            <div className={styles.routepath}>
+              {hero.larningpath[0].routepath.map((step, index) => (
+                <div key={step.id} className={styles.routeStep}>
+                  <span className={styles.stepTitle}>{step.title}</span>
+                  {index < hero.larningpath[0].routepath.length - 1 && (
+                    <span className={styles.arrow}>→</span>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
+          </section>
         </div>
       )}
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 16,
-          marginTop: 32,
-          flexWrap: "wrap",
-        }}
-      >
-        <a
-          href="/courses"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            fontSize: 14,
-            fontWeight: 600,
-            color: "#2563eb",
-            textDecoration: "none",
-            whiteSpace: "nowrap",
-          }}
-        >
-          ← Back to Courses
-        </a>
-
-        <a
-          className="Courses-module__mQnfCa__enrollBtn"
-          style={{ textDecoration: "none" }}
-          href="/contact"
-        >
-          Enroll Now →
-        </a>
+      {/* BREADCRUMB */}
+      <div ref={breadcrumbRef}> {/* ← added wrapper */}
+        <Breadcrumb course={selected} />
       </div>
+
+      {/* COURSES SECTION */}
+      <section className={styles.coursesSection}>
+        {/* LEFT — course list */}
+        <div className={styles.sidebar}>
+          {courses?.map((course) => (
+            <div
+              key={course.id}
+              className={`${styles.card} ${selected?.id === course.id ? styles.active : ""}`}
+              onClick={() => selectCourse(course)} // ← changed from setSelected
+            >
+              <div className={styles.cardTop}>
+                <span className={styles.category}>{course.category}</span>
+                {course.badge && (
+                  <span className={styles.badge}>{course.badge}</span>
+                )}
+              </div>
+              <h3>{course.title}</h3>
+              {/* Real crawlable link to the course's own SEO page.
+                  Kept separate from the tab-switch onClick above so Google/social
+                  crawlers can discover /courses/[slug], while clicking the card
+                  itself still just switches tabs for normal visitors. */}
+              <Link
+                href={`/courses/${course.slug}`}
+                style={{
+                  display: "inline-block",
+                  marginTop: 8,
+                  fontSize: 13,
+                  color: "#2563eb",
+                  textDecoration: "none",
+                }}
+                onClick={(e) => e.stopPropagation()} // don't also trigger tab-switch
+              >
+                View full details →
+              </Link>
+              {/* <div className={styles.cardMeta}>
+                <span>{course.level}</span>
+                <span>{course.duration}</span>
+                <span>👥 {course.students}</span>
+              </div> */}
+            </div>
+          ))}
+        </div>
+
+        {/* RIGHT — course detail */}
+        {selected && (
+          <div className={styles.detail} key={selected.id}>
+            <div className={styles.detailHeader}>
+              <span className={styles.category}>{selected.category}</span>
+              {selected.badge && (
+                <span className={styles.badge}>{selected.badge}</span>
+              )}
+            </div>
+            <h2>{selected.title}</h2>
+            <p>{selected.description}</p>
+            {/* <div className={styles.detailMeta}>
+              <span>📊 {selected.level}</span>
+              <span>⏱ {selected.duration}</span>
+              <span>👥 {selected.students} students</span>
+              <span>
+                {selected.price === 0 ? "🆓 Free" : `💰 ₹${selected.price}`}
+              </span>
+              <span>⭐ {selected.rating}</span>
+            </div> */}
+
+            {selected.topics?.length > 0 && (
+              <>
+                <SingleAccordion topics={selected.topics} courseTitle={selected.title} />
+              </>
+            )}
+
+            <Link
+              href="/contact"
+              className={styles.enrollBtn}
+              style={{ textDecoration: "none" }}
+            >
+              Enroll Now →
+            </Link>
+          </div>
+        )}
+      </section>
     </div>
   );
 }
