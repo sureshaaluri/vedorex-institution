@@ -89,7 +89,11 @@ ssh "$SSH_CONN" "
   [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\"
 
   cd '$REMOTE_PATH'
-  npm install --production
+  npm install --omit=dev || {
+    echo 'NPM install failed, cleaning node_modules and retrying...'
+    rm -rf node_modules
+    npm install --omit=dev
+  }
 
   # Install PM2 globally if not present
   if ! command -v pm2 &> /dev/null; then
