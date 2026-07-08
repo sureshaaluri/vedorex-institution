@@ -43,6 +43,12 @@ export async function generateMetadata(): Promise<Metadata> {
   if (seo?.metaDescription) metadata.description = seo.metaDescription;
   if (seo?.metaKeywords) metadata.keywords = seo.metaKeywords;
 
+  // Google Search Console ownership verification (site-wide, since this
+  // runs in the root layout and applies to every page including "/").
+  metadata.verification = {
+    google: "fHcvISBT_0hl-DswqA72JqVBh8jaInHgnO6lHeymxg8",
+  };
+
   return metadata;
 }
 
