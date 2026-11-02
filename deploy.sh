@@ -1,8 +1,14 @@
 #!/bin/bash
 
 # Strapi Deployment Script to Racknerd Server
-# Usage: ./deploy.sh <server_ip> <ssh_user> <remote_path>
-# Example: ./deploy.sh 192.168.1.100 root /var/www/strapi
+# Usage: ./deploy.sh <server_ip> <ssh_user> <remote_path> [production|development]
+# Example: ./deploy.sh 192.168.1.100 root /var/www/strapi production
+#
+# production  (default): builds locally, uploads dist/.strapi, runs `strapi start` under PM2 as "strapi"
+# development: skips the build, uploads source, runs `strapi develop` (auto-reload) under PM2 as "strapi-dev"
+#
+# Development port defaults to 1338 (override with DEV_PORT=xxxx ./deploy.sh ...)
+# Env file: uses .env.<mode> (e.g. .env.production / .env.development) if present, otherwise .env
 
 set -e  # Exit on any error
 
@@ -14,17 +20,38 @@ NC='\033[0m' # No Color
 
 # Check arguments
 if [ $# -lt 3 ]; then
-    echo -e "${RED}Usage: ./deploy.sh <server_ip> <ssh_user> <remote_path>${NC}"
-    echo "Example: ./deploy.sh 192.168.1.100 root /var/www/strapi"
+    echo -e "${RED}Usage: ./deploy.sh <server_ip> <ssh_user> <remote_path> [production|development]${NC}"
+    echo "Example: ./deploy.sh 192.168.1.100 root /var/www/strapi production"
     exit 1
 fi
 
 SERVER_IP=$1
 SSH_USER=$2
 REMOTE_PATH=$3
+MODE=${4:-production}
 SSH_CONN="${SSH_USER}@${SERVER_IP}"
 
-echo -e "${YELLOW}Starting Strapi deployment to ${SERVER_IP}...${NC}"
+case "$MODE" in
+    production|prod)
+        MODE="production"
+        PM2_NAME="strapi"
+        START_SCRIPT="start"
+        NPM_INSTALL="npm install --omit=dev"
+        ;;
+    development|dev)
+        MODE="development"
+        PM2_NAME="strapi-dev"
+        START_SCRIPT="develop"
+        NPM_INSTALL="npm install"
+        PORT_OVERRIDE=${DEV_PORT:-1338}  # must differ from the production process
+        ;;
+    *)
+        echo -e "${RED}Invalid mode '$MODE'. Use 'production' or 'development'.${NC}"
+        exit 1
+        ;;
+esac
+
+echo -e "${YELLOW}Starting Strapi ${MODE} deployment to ${SERVER_IP}...${NC}"
 
 # Get script directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -33,25 +60,40 @@ PROJECT_ROOT="$SCRIPT_DIR"
 # Determine SERVER_DIR - could be at ./server or current directory
 if [ -d "$PROJECT_ROOT/server" ] && [ -f "$PROJECT_ROOT/server/package.json" ]; then
     SERVER_DIR="$PROJECT_ROOT/server"
-elif [ -f "$PROJECT_ROOT/package.json" ] && [ -d "$PROJECT_ROOT/dist" ]; then
+elif [ -f "$PROJECT_ROOT/package.json" ]; then
     SERVER_DIR="$PROJECT_ROOT"
 else
     echo -e "${RED}Error: Could not find server directory${NC}"
     echo -e "${RED}Expected either:${NC}"
     echo -e "${RED}  - $PROJECT_ROOT/server/package.json${NC}"
-    echo -e "${RED}  - $PROJECT_ROOT/package.json with $PROJECT_ROOT/dist${NC}"
+    echo -e "${RED}  - $PROJECT_ROOT/package.json${NC}"
     exit 1
 fi
 
 echo -e "${YELLOW}Using server directory: $SERVER_DIR${NC}"
 
-# Step 1: Build the project
-echo -e "${YELLOW}[1/5] Building Strapi project...${NC}"
+# Pick env file for this mode
+if [ -f "$SERVER_DIR/.env.$MODE" ]; then
+    ENV_FILE="$SERVER_DIR/.env.$MODE"
+elif [ -f "$SERVER_DIR/.env" ]; then
+    ENV_FILE="$SERVER_DIR/.env"
+else
+    echo -e "${RED}Error: no .env.$MODE or .env found in $SERVER_DIR${NC}"
+    exit 1
+fi
+echo -e "${YELLOW}Using env file: $(basename "$ENV_FILE")${NC}"
+
+# Step 1: Build the project (production only)
 cd "$SERVER_DIR"
-export NODE_OPTIONS="--max-old-space-size=2048"
-npm run build
-unset NODE_OPTIONS
-echo -e "${GREEN}✓ Build completed${NC}"
+if [ "$MODE" = "production" ]; then
+    echo -e "${YELLOW}[1/5] Building Strapi project...${NC}"
+    export NODE_OPTIONS="--max-old-space-size=2048"
+    NODE_ENV=production npm run build
+    unset NODE_OPTIONS
+    echo -e "${GREEN}✓ Build completed${NC}"
+else
+    echo -e "${YELLOW}[1/5] Skipping build (development mode)${NC}"
+fi
 
 # Step 2: Create backup on remote server
 echo -e "${YELLOW}[2/5] Creating backup on remote server...${NC}"
@@ -71,15 +113,43 @@ ssh "$SSH_CONN" "mkdir -p '$REMOTE_PATH'"
 
 # Step 4: Upload files
 echo -e "${YELLOW}[4/5] Uploading files to server...${NC}"
-rsync -avz --delete \
-  --exclude 'node_modules' \
-  --exclude '.git' \
-  --exclude '.tmp' \
-  --exclude '.gitignore' \
-  "$SERVER_DIR/dist/" "$SSH_CONN:${REMOTE_PATH}/dist/"
+if [ "$MODE" = "production" ]; then
+    rsync -avz --delete \
+      --exclude 'node_modules' \
+      --exclude '.git' \
+      --exclude '.tmp' \
+      --exclude '.gitignore' \
+      "$SERVER_DIR/dist/" "$SSH_CONN:${REMOTE_PATH}/dist/"
 
-rsync -avz "$SERVER_DIR/.strapi/" "$SSH_CONN:${REMOTE_PATH}/.strapi/"
-rsync -avz "$SERVER_DIR/package.json" "$SERVER_DIR/package-lock.json" "$SERVER_DIR/.env" "$SSH_CONN:${REMOTE_PATH}/"
+    rsync -avz "$SERVER_DIR/.strapi/" "$SSH_CONN:${REMOTE_PATH}/.strapi/"
+else
+    # Source is needed for `strapi develop`; it builds the admin panel itself
+    rsync -avz --delete \
+      --exclude 'node_modules' \
+      --exclude '.git' \
+      --exclude '.tmp' \
+      --exclude '.strapi' \
+      --exclude 'dist' \
+      --exclude '.env*' \
+      --exclude 'public/uploads' \
+      "$SERVER_DIR/src" "$SERVER_DIR/config" "$SERVER_DIR/database" \
+      "$SERVER_DIR/public" "$SERVER_DIR/types" "$SERVER_DIR/tsconfig.json" \
+      "$SSH_CONN:${REMOTE_PATH}/"
+fi
+rsync -avz "$SERVER_DIR/package.json" "$SERVER_DIR/package-lock.json" "$SSH_CONN:${REMOTE_PATH}/"
+rsync -avz "$ENV_FILE" "$SSH_CONN:${REMOTE_PATH}/.env"
+ssh "$SSH_CONN" "mkdir -p '$REMOTE_PATH/public/uploads'"
+APP_PORT=$(grep -E '^PORT=' "$ENV_FILE" | cut -d= -f2 | tr -d '\r"' || true)
+APP_PORT=${APP_PORT:-1337}
+if [ "$MODE" = "development" ]; then
+    # Keep the dev instance off the production port and out of production mode
+    APP_PORT=$PORT_OVERRIDE
+    ssh "$SSH_CONN" "
+      cd '$REMOTE_PATH'
+      sed -i -E '/^(PORT|NODE_ENV)=/d' .env
+      printf '\nPORT=$APP_PORT\nNODE_ENV=development\n' >> .env
+    "
+fi
 echo -e "${GREEN}✓ Files uploaded${NC}"
 
 # Step 5: Install dependencies and restart
@@ -89,10 +159,10 @@ ssh "$SSH_CONN" "
   [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\"
 
   cd '$REMOTE_PATH'
-  npm install --omit=dev || {
+  $NPM_INSTALL || {
     echo 'NPM install failed, cleaning node_modules and retrying...'
     rm -rf node_modules
-    npm install --omit=dev
+    $NPM_INSTALL
   }
 
   # Install PM2 globally if not present
@@ -101,10 +171,10 @@ ssh "$SSH_CONN" "
   fi
 
   # Restart or start the app with PM2
-  if pm2 describe strapi > /dev/null 2>&1; then
-    pm2 restart strapi
+  if pm2 describe $PM2_NAME > /dev/null 2>&1; then
+    pm2 restart $PM2_NAME --update-env
   else
-    pm2 start npm --name strapi -- run start
+    NODE_ENV=$MODE pm2 start npm --name $PM2_NAME -- run $START_SCRIPT
   fi
 
   # Save PM2 process list so it survives reboots
@@ -113,13 +183,13 @@ ssh "$SSH_CONN" "
   # Set up PM2 to start on system boot (prints command — run it once manually if needed)
   pm2 startup || true
 
-  echo 'Service started. Check logs with: pm2 logs strapi'
+  echo 'Service started. Check logs with: pm2 logs $PM2_NAME'
 "
 echo -e "${GREEN}✓ Service deployed and started${NC}"
 
-echo -e "${GREEN}✓ Deployment completed successfully!${NC}"
-echo -e "${YELLOW}Admin Panel: http://${SERVER_IP}:1337/admin${NC}"
-echo -e "${YELLOW}API: http://${SERVER_IP}:1337/api${NC}"
+echo -e "${GREEN}✓ ${MODE} deployment completed successfully!${NC}"
+echo -e "${YELLOW}Admin Panel: http://${SERVER_IP}:${APP_PORT}/admin${NC}"
+echo -e "${YELLOW}API: http://${SERVER_IP}:${APP_PORT}/api${NC}"
 
-
-# cd /home/suresh/NextJS-Strapi/vedorexAcademy/server && ./deploy.sh 107.172.55.253 adminuser /home/adminuser/apps/server
+# Production:  cd /home/suresh/NextJS-Strapi/vedorexAcademy/server && ./deploy.sh 107.172.55.253 adminuser /home/adminuser/apps/server production
+# Development: cd /home/suresh/NextJS-Strapi/vedorexAcademy/server && ./deploy.sh 107.172.55.253 adminuser /home/adminuser/apps/server-dev development
