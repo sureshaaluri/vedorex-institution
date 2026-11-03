@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Nunito } from "next/font/google";
 import WelcomePopup from "@/components/WelcomePopup";
+import VedorexWhatsAppPopup from "@/components/VedorexWhatsAppPopup";
 import { getPopupData } from "@/lib/getPopupData";
 import { API_ENDPOINTS, APP_CONFIG } from "@/lib/constants";
 
@@ -85,6 +86,7 @@ export default async function RootLayout({
     >
       <body className={nunito.className}>
         <Navbar data={navbarData} />
+        <VedorexWhatsAppPopup />
         <WelcomePopup data={popupData} />
         {children}
         <Footer footerData={footerData} />
