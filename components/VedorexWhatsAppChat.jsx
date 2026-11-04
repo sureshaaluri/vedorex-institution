@@ -58,6 +58,13 @@ export default function VedorexWhatsAppChat({
     setMessages((prev) => [...prev, userMsg]);
     setInputText("");
 
+    // Deliver the message to the Vedorex WhatsApp number (opens WhatsApp
+    // Web/app with the text prefilled; the user presses send there).
+    if (fullPhone) {
+      const url = `https://wa.me/${fullPhone}?text=${encodeURIComponent(trimmed)}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
     // Simulated automated assistant acknowledgement from Vedorex Academy
     setTimeout(() => {
       setMessages((prev) => [
