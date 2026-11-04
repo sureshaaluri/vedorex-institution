@@ -59,7 +59,12 @@ const config = ({
     },
     sqlite: {
       connection: {
-        filename: path.join(__dirname, "..", "..", ".tmp/data.db"),
+        // DATABASE_FILENAME lets dev and prod instances share one SQLite file.
+        // When unset, the original default path is used (no behaviour change).
+        filename: env(
+          "DATABASE_FILENAME",
+          path.join(__dirname, "..", "..", ".tmp/data.db"),
+        ),
       },
       useNullAsDefault: true,
     },

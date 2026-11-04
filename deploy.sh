@@ -149,6 +149,24 @@ if [ "$MODE" = "development" ]; then
       sed -i -E '/^(PORT|NODE_ENV)=/d' .env
       printf '\nPORT=$APP_PORT\nNODE_ENV=development\n' >> .env
     "
+
+    # Share the production database (and uploads) with the dev instance.
+    # PROD_PATH defaults to REMOTE_PATH with a trailing "-dev" removed.
+    PROD_PATH=${PROD_PATH:-${REMOTE_PATH%-dev}}
+    if [ "$PROD_PATH" != "$REMOTE_PATH" ]; then
+        ssh "$SSH_CONN" "
+          cd '$REMOTE_PATH'
+          sed -i -E '/^DATABASE_FILENAME=/d' .env
+          printf 'DATABASE_FILENAME=$PROD_PATH/.tmp/data.db\n' >> .env
+          # share uploaded media too
+          if [ -d '$PROD_PATH/public/uploads' ] && [ ! -L public/uploads ]; then
+            mv public/uploads public/uploads.local.\$(date +%s) 2>/dev/null || true
+            ln -s '$PROD_PATH/public/uploads' public/uploads
+          fi
+        "
+    else
+        echo -e "${YELLOW}Warning: could not derive production path; set PROD_PATH to share the database.${NC}"
+    fi
 fi
 echo -e "${GREEN}✓ Files uploaded${NC}"
 
