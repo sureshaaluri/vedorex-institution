@@ -123,6 +123,15 @@ if [ "$MODE" = "production" ]; then
 
     rsync -avz "$SERVER_DIR/.strapi/" "$SSH_CONN:${REMOTE_PATH}/.strapi/"
 else
+    # Guard: the rsync below uses --delete on src/. Content-types built in the dev
+    # Content-Type Builder exist only on the server, so refuse to wipe them.
+    ONLY_ON_SERVER=$(rsync -rzn --delete --out-format='%n' "$SERVER_DIR/src/" "$SSH_CONN:${REMOTE_PATH}/src/" 2>/dev/null | grep '^deleting ' || true)
+    if [ -n "$ONLY_ON_SERVER" ] && [ "${FORCE:-0}" != "1" ]; then
+        echo -e "${RED}Dev server has src files not in your local repo (likely Content-Type Builder changes):${NC}"
+        echo "$ONLY_ON_SERVER"
+        echo -e "${RED}Run ./pull-schema.sh first, or re-run with FORCE=1 to overwrite them.${NC}"
+        exit 1
+    fi
     # Source is needed for `strapi develop`; it builds the admin panel itself
     rsync -avz --delete \
       --exclude 'node_modules' \

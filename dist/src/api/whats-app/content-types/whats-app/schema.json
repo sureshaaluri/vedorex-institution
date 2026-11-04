@@ -1,0 +1,30 @@
+{
+    "kind": "singleType",
+    "collectionName": "whats_apps",
+    "info": {
+        "singularName": "whats-app",
+        "pluralName": "whats-apps",
+        "displayName": "WhatsApp"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "title": {
+            "type": "string"
+        },
+        "welcomeMessage": {
+            "type": "string"
+        },
+        "phoneNumber": {
+            "type": "string"
+        },
+        "buttonText": {
+            "type": "string"
+        },
+        "isEnabled": {
+            "type": "boolean"
+        }
+    }
+}
